@@ -1,0 +1,406 @@
+# Licensed Materials - Property of IBM
+# IBM Order Management Software (5725-D10)
+# (C) Copyright IBM Corp. 2018, 2021 All Rights Reserved.
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+{{- if and .Values.global.license  .Values.global.licenseStoreCallCenter }}
+{{- include "sch.config.init" (list . "om-chart.sch.chart.config.values") }}
+{{- $httpPort := .Values.appserver.service.http.port | default 9080 }}
+{{- $httpsPort := .Values.appserver.service.https.port | default 9443 }}
+{{- $terminationGracePeriod := .Values.appserver.terminationGracePeriodSeconds | default 60 }}
+{{- $readyProbePeriod := 30 }}
+{{- $libertyStartupWrapper := .Values.appserver.config.libertyStartupWrapper }}
+{{- $liveProbeBeginDelay := .Values.appserver.livenessCheckBeginAfterSeconds | default 900 }}
+{{- $liveProbePeriod := 60 }}
+{{- $liveFailRestartSeconds := (mul .Values.appserver.livenessFailRestartAfterMinutes 60) | default 600 }}
+{{- $liveFailThreshold := div $liveFailRestartSeconds $liveProbePeriod }}
+{{- $jvmOptionsPath := "/config/jvm.options" }}
+{{- $sysOverridesPath := "/config/dropins/smcfs.ear/properties.jar/system_overrides.properties" }}
+{{- $sysOverridesInitPath := "/opt/ssfs/system_overrides.properties.init" }}
+{{- $stdPodLabel := "role" }}
+{{- $stdPodLabelVal := "appserver" }}
+{{- $custLabels := .Values.appserver.podLabels | default (dict) }}
+{{- $imgConfList := .Values.appserver.image.names }}
+{{- if and .Values.appserver.exposeRestService (.Capabilities.APIVersions.Has "route.openshift.io/v1") }}
+{{- $imgConfList = append $imgConfList (dict "name" "om-app" "purpose" "xapirest") }}
+{{- end }}
+
+
+
+{{- $varTrustStorePath := "" }}
+{{- $varTrustStorePass := "" }}
+{{- $varTrustedDir := "" }}
+{{- $varUseJDKTrustStore := "" }}
+{{- $varKeyStorePath := "" }}
+
+{{- if .Values.global.security }}
+{{- if .Values.global.security.ssl }}
+{{- if .Values.global.security.ssl.trustStore }}
+  {{- if or (.Values.global.security.ssl.trustStore.trustJavaCACerts) (and (.Values.global.security.ssl.trustStore.trustedCertDir) (ne .Values.global.security.ssl.trustStore.trustedCertDir "")) (and (.Values.global.security.ssl.trustStore.storeLocation) (ne .Values.global.security.ssl.trustStore.storeLocation "")) }}
+
+  {{- if and .Values.global.security.ssl.trustStore.storeLocation (ne .Values.global.security.ssl.trustStore.storeLocation "") }} 
+    {{- $varTrustStorePath = .Values.global.security.ssl.trustStore.storeLocation }}
+  {{- else if and .Values.global.security.ssl.trustStore.trustedCertDir (ne .Values.global.security.ssl.trustStore.trustedCertDir "") }}
+    {{- $varTrustStorePath = "/opt/ssfs/runtime/security/trustStore" }}
+    {{- $varTrustStorePass = "changeit" }}
+    {{- $varTrustedDir = .Values.global.security.ssl.trustStore.trustedCertDir }}
+    {{- if .Values.global.security.ssl.trustStore.trustJavaCACerts }}
+      {{- $varUseJDKTrustStore = "true" }}
+    {{- end }}
+  {{- else if .Values.global.security.ssl.trustStore.trustJavaCACerts }}
+    {{- $varTrustStorePath = "/opt/ssfs/runtime/security/trustStore" }}
+    {{- $varTrustStorePass = "changeit" }}
+    {{- $varUseJDKTrustStore = "true" }}   
+  {{- end }}
+
+  {{- end }}
+{{- end }}
+
+{{- if .Values.global.security.ssl.keyStore }}
+{{- if and .Values.global.security.ssl.keyStore.storeLocation (ne .Values.global.security.ssl.keyStore.storeLocation "")  }}
+{{- $varKeyStorePath = .Values.global.security.ssl.keyStore.storeLocation }}  
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- $varRoot := .}}
+{{- range $imgConfList }}
+{{- $imgConf := .}}
+{{- if $imgConf }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "om-chart.fullname" $varRoot }}-appserver-{{ include "om-chart.application" (list $imgConf) }}
+  labels:
+{{ include "sch.metadata.labels.standard" (list $varRoot) | indent 4 }}
+spec:
+  replicas: {{ $imgConf.replicaCount | default $varRoot.Values.appserver.replicaCount }}
+{{- if $varRoot.Values.appserver.deploymentStrategy }}
+  strategy: 
+{{ toYaml $varRoot.Values.appserver.deploymentStrategy | indent 4 }}
+{{- end }}
+  selector:
+    matchLabels:
+{{ include "sch.metadata.labels.standard" (list $varRoot "" (set $custLabels $stdPodLabel $stdPodLabelVal)) | indent 6 }}
+      appname: {{ include "om-chart.application" (list $imgConf) | quote }}
+  template:
+    metadata:
+      labels:
+{{ include "sch.metadata.labels.standard" (list $varRoot "" (set $custLabels $stdPodLabel $stdPodLabelVal)) | indent 8 }}
+        appname: {{ include "om-chart.application" (list $imgConf) | quote }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") $varRoot | sha256sum }}
+{{- include "sch.metadata.annotations.metering" (list $varRoot $varRoot.sch.chart.metering "" "" nil) | indent 8 }}
+    spec:
+{{- with $varRoot.Values.appserver.tolerations }}
+      tolerations:
+{{ toYaml $varRoot | indent 6 }}
+{{- end }}
+      affinity:
+{{- include "om-chart.nodeAffinity" (list $varRoot $varRoot.Values.appserver.nodeAffinity) | indent 8 }}
+{{- include "om-chart.podAffinity" (list $varRoot $varRoot.Values.appserver.podAffinity) | indent 8 }}
+{{- include "om-chart.podAntiAffinity" (list $varRoot $varRoot.Values.appserver.podAntiAffinity $stdPodLabel $stdPodLabelVal) | indent 8 }}
+      serviceAccountName: {{ $varRoot.Values.global.serviceAccountName | default "default" }}
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: {{ $varRoot.Values.global.persistence.securityContext.fsGroup | default 0 }}
+        supplementalGroups: [{{ $varRoot.Values.global.persistence.securityContext.supplementalGroup | default 0 }}]
+      {{- if eq (include "om-chart.require-datasetup" $varRoot) "true" }}
+      initContainers:
+      - name: {{ template "om-chart.fullname" $varRoot }}-appserver-init-{{ include "om-chart.application" (list $imgConf) }}
+        image: "{{ $varRoot.Values.global.image.repository }}/{{ $imgConf.name }}:{{ $imgConf.tag | default $varRoot.Values.appserver.image.tag }}"
+        securityContext:
+          privileged: false
+          runAsUser: 1001
+          readOnlyRootFilesystem: false
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        command: ['/bin/bash', '-c']
+        args:
+        - 'while [ -z $(find /mediator -maxdepth 1 -name datasetup.complete) ]; do echo "datasetup not complete $(date +%Y-%m-%d.%H.%M.%S)"; sleep 30; done; echo "datasetup found complete $(date +%Y-%m-%d.%H.%M.%S)"'
+        volumeMounts:
+        - name: {{ $varRoot.Values.global.persistence.claims.name }}
+          mountPath: "/shared"
+        - name: mediator
+          mountPath: "/mediator"
+      {{- end }}
+      terminationGracePeriodSeconds: {{ $terminationGracePeriod }}
+      containers:
+      - name: {{ template "om-chart.fullname" $varRoot }}-appserver-{{ include "om-chart.application" (list $imgConf) }}
+        {{- if or $imgConf.tag $varRoot.Values.appserver.image.tag }}
+        image: "{{ $varRoot.Values.global.image.repository }}/{{ $imgConf.name }}:{{ $imgConf.tag | default $varRoot.Values.appserver.image.tag }}"
+        {{- else }}
+        image: "{{ $varRoot.Values.global.image.repository }}/{{ $imgConf.name }}:{{ $varRoot.Values.global.image.tag }}"
+        {{- end }}
+        {{- if $varRoot.Values.appserver.image.pullPolicy }}
+        imagePullPolicy: {{ $varRoot.Values.appserver.image.pullPolicy }}
+        {{- else }}
+        imagePullPolicy: {{ $varRoot.Values.global.image.pullPolicy }}
+        {{- end }}
+        lifecycle: 
+          preStop:
+            exec:
+              command: ["/bin/bash","-c","/opt/ibm/wlp/bin/server stop defaultServer"]
+        securityContext:
+          privileged: false
+          runAsUser: 1001
+          readOnlyRootFilesystem: false
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        command: ["/bin/bash", "-c"]
+        args:
+        - "/opt/ssfs/runtime/container-scripts/utils/evaluateEnvs.sh {{ $jvmOptionsPath }}.init {{ $jvmOptionsPath }} && 
+        /opt/ssfs/runtime/container-scripts/utils/evaluateEnvs.sh {{ $sysOverridesInitPath }} {{ $sysOverridesPath }} && 
+        {{- if and $varRoot.Values.appserver.ingress.ssl.enabled ($varRoot.Capabilities.APIVersions.Has "route.openshift.io/v1") }}
+        echo '<server/>' > /config/configDropins/defaults/keystore.xml &&
+        openssl pkcs12 -export -out /config/tls.p12 -inkey /config/service-certs/tls.key -in /config/service-certs/tls.crt -password 'env:tlskeystorepassword' &&
+        {{- if ne $varKeyStorePath "" }}
+        keytool -no-prompt -importkeystore -srckeystore \"$JAVA_KEY_STORE_PATH\" -destkeystore /config/tls.p12 -srcstoretype PKCS12 -deststoretype PKCS12 -srcstorepass \"$JAVA_KEY_STORE_PASS\" -deststorepass \"$tlskeystorepassword\" -destkeypass \"$tlskeystorepassword\" &&
+        {{- end }}        
+        {{- end }}
+        /opt/ssfs/runtime/container-scripts/utils/configCerts.sh && {{ $libertyStartupWrapper }} /opt/ibm/wlp/bin/server run defaultServer"
+        env:
+        - name: OM_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: OM_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: OM_RELEASE
+          value: {{ $varRoot.Release.Name }}
+        - name: consoleadminpassword
+          valueFrom:
+            secretKeyRef:
+              name: {{ $varRoot.Values.global.appSecret }}
+              key: consoleadminpassword
+        - name: consolenonadminpassword
+          valueFrom:
+            secretKeyRef:
+              name: {{ $varRoot.Values.global.appSecret }}
+              key: consolenonadminpassword
+        - name: dbpassword
+          valueFrom:
+            secretKeyRef:
+              name: {{ $varRoot.Values.global.appSecret }}
+              key: dbpassword
+        {{- if and $varRoot.Values.appserver.ingress.ssl.enabled ($varRoot.Capabilities.APIVersions.Has "route.openshift.io/v1") }}
+        - name: tlskeystorepassword
+          valueFrom:
+            secretKeyRef:
+              name: {{ $varRoot.Values.global.appSecret }}
+              key: tlskeystorepassword
+        {{- end }}
+        {{- if ne $varTrustStorePath "" }}
+        - name: JAVA_TRUST_STORE_PATH
+          value: {{ $varTrustStorePath | quote }}
+        - name: JAVA_TRUST_STORE_PASS
+          {{- if ne $varTrustStorePass "" }}
+          value: {{ $varTrustStorePass | quote }}
+          {{- else }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ $varRoot.Values.global.appSecret }}
+              key: trustStorePassword
+          {{- end }}
+        {{- end }} 
+        {{- if ne $varUseJDKTrustStore "" }}
+        - name: USE_JDK_TRUST_STORE
+          value: {{ $varUseJDKTrustStore | quote }}            
+        {{- end }}        
+        {{- if ne $varTrustedDir "" }}
+        - name: OMS_TRUSTED_CERTS_DIR
+          value: {{ $varTrustedDir | quote }}            
+        {{- end }}        
+        
+        {{- if ne $varKeyStorePath "" }}
+        - name: JAVA_KEY_STORE_PATH
+          value: {{ $varKeyStorePath | quote }}
+        - name: JAVA_KEY_STORE_PASS
+          valueFrom:
+            secretKeyRef:
+              name: {{ $varRoot.Values.global.appSecret }}
+              key: keyStorePassword            
+       {{- end }}
+     
+        - name: LOG_FORMAT
+          value: {{ $varRoot.Values.global.log.format | default "json" }}
+{{- with $varRoot.Values.global.envs }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+        ports:
+        - name: https
+          containerPort: {{ $httpsPort }}
+          protocol: TCP
+        - name: http
+          containerPort: {{ $httpPort }}
+          protocol: TCP
+        volumeMounts:
+        - name: {{ $varRoot.Values.global.persistence.claims.name }}
+          mountPath: "/shared"
+        {{- if $varRoot.Values.global.mq.bindingConfigName }}
+        - name: binding-config
+          mountPath: {{ $varRoot.Values.global.mq.bindingMountPath | quote }}
+          subPath: .bindings
+        {{- end }}
+        - name: server-xml
+          mountPath: "/config/server.xml"
+          subPath: server.xml
+        - name: config
+          mountPath: "{{ $jvmOptionsPath }}.init"
+          subPath: jvm.options
+        {{- if $varRoot.Values.global.customerOverrides }}
+        - name: config
+          mountPath: "/config/dropins/smcfs.ear/properties.jar/customer_overrides.properties"
+          subPath: customer_overrides.properties
+        {{- end }}
+        - name: config
+          mountPath: "{{ $sysOverridesInitPath }}"
+          subPath: system_overrides.properties
+        {{- if and $varRoot.Values.appserver.ingress.ssl.enabled ($varRoot.Capabilities.APIVersions.Has "route.openshift.io/v1") }}
+        - name: service-certs
+          mountPath: /config/service-certs/tls.key
+          subPath: tls.key
+        - name: service-certs
+          mountPath: /config/service-certs/tls.crt
+          subPath: tls.crt
+        {{- end }}
+        {{- /* mount custom config maps */ -}}
+        {{- if $varRoot.Values.global.customConfigMaps -}}
+        {{ range $varRoot.Values.global.customConfigMaps -}}
+        {{ if . -}}
+        {{ $configMap := . }}
+        {{- if and $configMap.name $configMap.mountPath }}
+        - name: {{ $configMap.name }}
+          mountPath: {{ $configMap.mountPath }}
+          {{- if $configMap.subPath }}
+          subPath: {{ $configMap.subPath }}
+          {{- end }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
+        {{- /* mount custom secrets */ -}}
+        {{- if $varRoot.Values.global.customSecrets -}}
+        {{ range $varRoot.Values.global.customSecrets -}}
+        {{ if . -}}
+        {{ $secret := . }}
+        {{- if and $secret.name $secret.mountPath }}
+        - name: {{ $secret.name }}
+          mountPath: {{ $secret.mountPath }}
+          {{- if $secret.readOnly }}
+          readOnly: {{ $secret.readOnly }}
+          {{- end }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
+        # - name: host-timezone
+        #   mountPath: /etc/localtime
+        livenessProbe:
+          httpGet:
+            path: {{ $imgConf.probePath }}
+            port: {{ $httpPort }}
+            scheme: HTTP
+          {{- /* give some buffer time to the appserver startup */}}
+          initialDelaySeconds: {{ add $liveProbeBeginDelay 120 }}
+          {{- /* check for liveness every minute */}}
+          periodSeconds: {{ $liveProbePeriod }}
+          {{- /* A successful http probe must return in less than 1 seconds */}}
+          timeoutSeconds: 1
+          {{- /* once probing begins keep trying. e.g with 1 min period and 10 tries, restart pod after 10 minutes */}}
+          failureThreshold: {{ $liveFailThreshold }}
+        readinessProbe:
+          httpGet:
+            path: {{ $imgConf.probePath }}
+            port: {{ $httpPort }}
+            scheme: HTTP
+          {{- /* wait for some time (1 mins) before beginning to probe readiness */}}
+          initialDelaySeconds: 60
+          {{- /* check for readiness every n seconds */}}
+          periodSeconds: {{ $readyProbePeriod }}
+          {{- /* A successful http probe must return in less than 1 seconds */}}
+          timeoutSeconds: 1
+          {{- /* keeping max attempts in sync with liveness probe. E.g. if liveness probe starts after 10 minutes
+               and takes another 10 minutes to restart pod. keep trying till approx 20 minutes */}}
+          failureThreshold: {{ div (add $liveProbeBeginDelay $liveFailRestartSeconds ) ($readyProbePeriod) }}
+        resources:
+{{ toYaml $varRoot.Values.appserver.resources | indent 10 }}
+      volumes:
+      - name: {{ $varRoot.Values.global.persistence.claims.name }}
+        persistentVolumeClaim:
+          claimName: {{ template "om-chart.fullname" $varRoot }}-{{ $varRoot.Values.global.persistence.claims.name | lower }}
+      - name: config
+        configMap:
+          name: {{ template "om-chart.fullname" $varRoot }}-config-{{ include "om-chart.application" (list $imgConf) }}
+          items:
+          - key: jvm.options
+            path: jvm.options
+        {{- if $varRoot.Values.global.customerOverrides }}
+          - key: customer_overrides.properties
+            path: customer_overrides.properties
+        {{- end }}
+          - key: system_overrides.properties
+            path: system_overrides.properties
+      - name: server-xml
+        configMap:
+          name: {{ $varRoot.Values.appserver.config.libertyServerXml | default (printf "%s-%s" (include "om-chart.fullname" $varRoot) "def-server-xml-conf" ) }}
+      - name: secret
+        secret:
+          secretName: {{ $varRoot.Values.global.appSecret }}
+        {{- if and $varRoot.Values.appserver.ingress.ssl.enabled ($varRoot.Capabilities.APIVersions.Has "route.openshift.io/v1") }}
+      - name: service-certs
+        secret:
+          secretName: {{ template "om-chart.fullname" $varRoot }}-{{ include "om-chart.application" (list $imgConf) }}
+        {{- end }}
+        {{- if $varRoot.Values.global.mq.bindingConfigName }}
+      - name: binding-config
+        configMap:
+          name: {{ $varRoot.Values.global.mq.bindingConfigName }}
+      {{- end }}
+      - name: mediator
+        configMap:
+          name: {{ template "om-chart.fullname" $varRoot }}-mediator
+      {{- /* custom config maps */ -}}
+      {{- if $varRoot.Values.global.customConfigMaps -}}
+      {{ range $varRoot.Values.global.customConfigMaps -}}
+      {{ if . -}}
+      {{ $configMap := . }}
+      {{- if and $configMap.name $configMap.mountPath }}
+      - name: {{ $configMap.name }}
+        configMap:
+          name: {{ $configMap.name }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- /* custom secrets */ -}}
+      {{- if $varRoot.Values.global.customSecrets -}}
+      {{ range $varRoot.Values.global.customSecrets -}}
+      {{ if . -}}
+      {{ $secret := . }}
+      {{- if and $secret.name $secret.mountPath }}
+      - name: {{ $secret.name }}
+        secret:
+          secretName: {{ $secret.name }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      # - name: host-timezone
+      #   hostPath:
+      #     path: /etc/localtime
+---
+{{- end }}
+{{- end }}
+
+{{- end }}

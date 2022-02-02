@@ -1,0 +1,28 @@
+# Licensed Materials - Property of IBM
+# IBM Order Management Software (5725-D10)
+# (C) Copyright IBM Corp. 2018, 2021 All Rights Reserved.
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+{{- include "om-chart.validateInput" . -}}
+{{- if and .Values.global.license  .Values.global.licenseStoreCallCenter }}
+{{- if not (lookup "v1" "PersistentVolumeClaim" .Release.Namespace .Values.global.persistence.claims.name ) }}
+{{ $global := . }}
+{{- include "sch.config.init" (list $global "om-chart.sch.chart.config.values") }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "om-chart.fullname" $global }}-{{ .Values.global.persistence.claims.name | lower }}
+  annotations:
+    "helm.sh/resource-policy": keep
+  labels:
+{{ include "sch.metadata.labels.standard" (list $global) | indent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.global.persistence.claims.accessMode | quote }}
+{{- if .Values.global.persistence.claims.storageClassName }}
+  storageClassName: {{ .Values.global.persistence.claims.storageClassName | quote }}
+{{- end }}
+  resources:
+    requests:
+      storage: "{{ .Values.global.persistence.claims.capacity }}{{ .Values.global.persistence.claims.capacityUnit }}"
+{{- end }}
+{{- end }}

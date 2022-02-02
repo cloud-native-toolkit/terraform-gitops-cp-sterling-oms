@@ -1,4 +1,4 @@
-module "gitops_module" {
+module "gitops-cp-sterling-oms" {
   source = "./module"
 
   gitops_config = module.gitops.gitops_config

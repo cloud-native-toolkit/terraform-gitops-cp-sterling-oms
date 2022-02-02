@@ -5,13 +5,13 @@ resource null_resource write_outputs {
 
     environment = {
       OUTPUT = jsonencode({
-        name        = module.gitops_module.name
-        branch      = module.gitops_module.branch
-        namespace   = module.gitops_module.namespace
-        server_name = module.gitops_module.server_name
-        layer       = module.gitops_module.layer
-        layer_dir   = module.gitops_module.layer == "infrastructure" ? "1-infrastructure" : (module.gitops_module.layer == "services" ? "2-services" : "3-applications")
-        type        = module.gitops_module.type
+        name        = module.oms.name
+        branch      = module.oms.branch
+        namespace   = module.oms.namespace
+        server_name = module.oms.server_name
+        layer       = module.oms.layer
+        layer_dir   = module.oms.layer == "infrastructure" ? "1-infrastructure" : (module.oms.layer == "services" ? "2-services" : "3-applications")
+        type        = module.oms.type
       })
     }
   }

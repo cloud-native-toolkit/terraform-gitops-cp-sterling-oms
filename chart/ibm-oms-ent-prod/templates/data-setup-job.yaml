@@ -1,0 +1,179 @@
+# Licensed Materials - Property of IBM
+# IBM Order Management Software (5725-D10)
+# (C) Copyright IBM Corp. 2018, 2021 All Rights Reserved.
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+{{- if and .Values.global.license  .Values.global.licenseStoreCallCenter }}
+{{- if eq (include "om-chart.require-datasetup" .) "true" }}
+{{- include "sch.config.init" (list . "om-chart.sch.chart.config.values") }}
+{{- $sysOverridesInitPath := "/opt/ssfs/system_overrides.properties.init" }}
+{{- $sysOverridesPath := "/opt/ssfs/runtime/properties/system_overrides.properties" }}
+
+{{- $varTrustStorePath := "" }}
+{{- $varTrustStorePass := "" }}
+{{- $varTrustedDir := "" }}
+{{- $varUseJDKTrustStore := "" }}
+{{- $varKeyStorePath := "" }}
+
+
+{{- if .Values.global.security }}
+{{- if .Values.global.security.ssl }}
+{{- if .Values.global.security.ssl.trustStore }}
+  {{- if or (.Values.global.security.ssl.trustStore.trustJavaCACerts) (and (.Values.global.security.ssl.trustStore.trustedCertDir) (ne .Values.global.security.ssl.trustStore.trustedCertDir "")) (and (.Values.global.security.ssl.trustStore.storeLocation) (ne .Values.global.security.ssl.trustStore.storeLocation "")) }}
+  
+  {{- if and .Values.global.security.ssl.trustStore.storeLocation (ne .Values.global.security.ssl.trustStore.storeLocation "") }} 
+    {{- $varTrustStorePath = .Values.global.security.ssl.trustStore.storeLocation }}
+  {{- else if and .Values.global.security.ssl.trustStore.trustedCertDir (ne .Values.global.security.ssl.trustStore.trustedCertDir "") }}
+    {{- $varTrustStorePath = "/opt/ssfs/runtime/security/trustStore" }}
+    {{- $varTrustStorePass = "changeit" }}
+    {{- $varTrustedDir = .Values.global.security.ssl.trustStore.trustedCertDir }}
+    {{- if .Values.global.security.ssl.trustStore.trustJavaCACerts }}
+      {{- $varUseJDKTrustStore = "true" }}
+    {{- end }}
+  {{- else if .Values.global.security.ssl.trustStore.trustJavaCACerts }}
+    {{- $varTrustStorePath = "/opt/ssfs/runtime/security/trustStore" }}
+    {{- $varTrustStorePass = "changeit" }}
+    {{- $varUseJDKTrustStore = "true" }}   
+  {{- end }}
+
+  {{- end }}
+{{- end }}
+
+{{- if .Values.global.security.ssl.keyStore }}
+{{- if and .Values.global.security.ssl.keyStore.storeLocation (ne .Values.global.security.ssl.keyStore.storeLocation "")  }}
+{{- $varKeyStorePath = .Values.global.security.ssl.keyStore.storeLocation }}  
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- $varRoot := .}}
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "om-chart.fullname" . }}-datasetup
+  labels:
+{{ include "sch.metadata.labels.standard" (list .) | indent 4 }}
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+{{ include "sch.metadata.labels.standard" (list .) | indent 8 }}
+      annotations:
+{{- include "sch.metadata.annotations.metering" (list . .sch.chart.metering) | indent 8 }}
+    spec:
+      affinity:
+{{- include "om-chart.nodeaffinity.onlyArch" . | indent 8 }}
+      serviceAccountName: {{ .Values.global.serviceAccountName | default "default" }}
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: {{ .Values.global.persistence.securityContext.fsGroup | default 0 }}
+        supplementalGroups: [{{ .Values.global.persistence.securityContext.supplementalGroup | default 0 }}]
+      restartPolicy: "Never"
+      containers:
+        - name: {{ template "om-chart.fullname" . }}-datasetup
+          image: "{{ .Values.global.image.repository }}/{{ .Values.global.image.agentName }}:{{ .Values.global.image.tag }}"
+          imagePullPolicy: {{ .Values.global.image.pullPolicy }}
+          env:
+          - name: OM_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: OM_RELEASE
+            value: {{ .Release.Name }}
+          - name: dbpassword
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.global.appSecret }}
+                key: dbpassword
+          - name: DATASETUP
+            value: {{ true | quote }}
+          {{- if ne $varTrustStorePath "" }}
+          - name: JAVA_TRUST_STORE_PATH
+            value: {{ $varTrustStorePath | quote }}
+          - name: JAVA_TRUST_STORE_PASS
+            {{- if ne $varTrustStorePass "" }}
+            value: {{ $varTrustStorePass | quote }}
+            {{- else }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ $varRoot.Values.global.appSecret }}
+                key: trustStorePassword
+            {{- end }}
+          {{- end }} 
+          {{- if ne $varUseJDKTrustStore "" }}
+          - name: USE_JDK_TRUST_STORE
+            value: {{ $varUseJDKTrustStore | quote }}            
+          {{- end }}        
+          {{- if ne $varTrustedDir "" }}
+          - name: OMS_TRUSTED_CERTS_DIR
+            value: {{ $varTrustedDir | quote }}            
+          {{- end }}        
+        
+          {{- if ne $varKeyStorePath "" }}
+          - name: JAVA_KEY_STORE_PATH
+            value: {{ $varKeyStorePath | quote }}
+          - name: JAVA_KEY_STORE_PASS
+            valueFrom:
+              secretKeyRef:
+                name: {{ $varRoot.Values.global.appSecret }}
+                key: keyStorePassword            
+          {{- end }}
+        
+          - name: LOG_FORMAT
+            value: {{ .Values.global.log.format | default "json" }}
+{{- with .Values.global.envs }}
+{{ toYaml . | indent 10 }}
+{{- end }}
+          securityContext:
+            privileged: false
+            runAsUser: 1000
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          command: ["/bin/bash", "-c"]
+          {{- $commonArg := printf "%s %s %s %s" "/opt/ssfs/runtime/container-scripts/utils/evaluateEnvs.sh" $sysOverridesInitPath $sysOverridesPath "&& /opt/ssfs/runtime/container-scripts/utils/configCerts.sh && "}}
+          {{- $lastFP := .Values.datasetup.fixPack.installedFPNo | default 0 }}
+          args:
+          - '{{ $commonArg }}
+          {{- if eq (include "om-chart.require-core-datasetup" .) "true" }}
+          if [ -d /opt/ssfs/runtime/docker-samples ]; then ln -s /opt/ssfs/runtime/docker-samples /opt/ssfs/runtime/container-scripts; fi &&
+          /opt/ssfs/runtime/container-scripts/kubernetes/bin/init.runtime.sh {{ .Values.datasetup.mode | default "create" }} && 
+          {{- end }}
+          {{- if eq (include "om-chart.require-fp-datasetup" .) "true" }}
+          sed -i "s|\(SMCFS_LAST_DATAMIGRATION_FP\).*|\1={{ $lastFP }}|g" properties/fpfactorysetup.properties &&
+          find database/fp-factorysetup -name "*.restart" -delete && cd bin && ./sci_ant.sh -f FSHelper.xml &&
+          {{- end }}
+          kubectl patch configmap {{ template "om-chart.fullname" . }}-mediator -p "{\"data\":{\"datasetup.complete\":\"true\"}}"'
+          volumeMounts:
+            - name: config
+              mountPath: "{{ $sysOverridesInitPath }}"
+              subPath: system_overrides.properties
+            - name: {{ .Values.global.persistence.claims.name }}
+              mountPath: "/shared"
+            # - name: host-timezone
+            #   mountPath: /etc/localtime
+      volumes:
+        - name: config
+          configMap:
+            name: {{ template "om-chart.fullname" . }}-config
+            items:
+            - key: system_overrides.properties
+              path: system_overrides.properties
+        - name: secret
+          secret:
+            secretName: {{ .Values.global.appSecret }}
+        - name: {{ .Values.global.persistence.claims.name }}
+          persistentVolumeClaim:
+            claimName: {{ template "om-chart.fullname" . }}-{{ .Values.global.persistence.claims.name | lower }}
+        # - name: host-timezone
+        #   hostPath:
+        #     path: /etc/localtime
+{{- end }}
+{{- end }}
