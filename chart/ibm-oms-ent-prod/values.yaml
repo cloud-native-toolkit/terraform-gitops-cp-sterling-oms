@@ -14,7 +14,7 @@ global:
 
   ## Set the value to True in order to accept the Store and Call Center application license @ http://ibm.biz/oms-apps-license
   ##
-  licenseStoreCallCenter: false
+  licenseStoreCallCenter: true
 
   ## This property can be used to override the <deployment name>-<chart name> portion of the resources generated
   ##
@@ -29,7 +29,7 @@ global:
     ## Example:
     ## repository: 'cp.icr.io/cp/ibm-oms-enterprise'
     ##
-    repository: ''
+    repository: 'image-registry.openshift-image-registry.svc:5000/gitops-cp-sterling-oms'
 
     ## Agent image name. Defaults to `om-agent`
     ##
@@ -46,7 +46,7 @@ global:
 
   ## Secret name
   ##
-  appSecret: ''
+  appSecret: 'ibm-oms-ent-prod-oms-secret'
 
   ## Database parameters
   ##
@@ -57,7 +57,7 @@ global:
 
     ## Database server port
     ##
-    port: 0
+    port: 50000
 
     ## Database name or catalog name
     ##
@@ -90,7 +90,7 @@ global:
 
   ## Service account name. Defaults to 'default'
   ##
-  serviceAccountName: default
+  serviceAccountName: ibm-oms-ent-prod-ibm-oms-ent-prod
 
   ## Array of customer overrides properties as key=value
   ##
@@ -107,7 +107,7 @@ global:
 
         ## Trust the java CA certificates by default. The value is ignored incase storeLocation is provided
         #
-        trustJavaCACerts: true
+        trustJavaCACerts: false
 
         ## Directory where the server certificates are present. The value is ignored incase storeLocation is provided
         #
@@ -508,13 +508,13 @@ omserver:
     ## Example:
     ## name: om-agent
     ##
-    name: ''
+    name: 'om-app'
 
     ## Agent image tag
     ## Example:
     ## tag: 10.0.0.17
     ##
-    tag: ''
+    tag: '10.0.0.26-amd64'
 
     ## Specify a imagePullPolicy. Defaults to 'IfNotPresent'
     ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -643,7 +643,7 @@ omserver:
 datasetup:
   ## Load factory data
   ##
-  loadFactoryData: ''
+  loadFactoryData: 'install'
 
   ## Run factory data load. Defaults to 'create'
   ##
@@ -652,7 +652,7 @@ datasetup:
   fixPack:
     ## Load fix pack factory data
     ##
-    loadFPFactoryData: ''
+    loadFPFactoryData: 'install'
 
     ## Currently installed fix pack number beyond which fix pack factory setup needs to be applied
     ##

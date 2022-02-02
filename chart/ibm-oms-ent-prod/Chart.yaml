@@ -1,6 +1,5 @@
 apiVersion: v2
 name: ibm-oms-ent-prod
-
 dependencies:
 - alias: sch
   name: ibm-sch
