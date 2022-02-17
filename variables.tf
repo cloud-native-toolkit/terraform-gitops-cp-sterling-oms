@@ -104,6 +104,12 @@ variable "consolenonadminpassword" {
   sensitive   = true
 }
 
+variable "entitlement_key" {
+  type        = string
+  description = "The entitlement key required to access Cloud Pak images"
+  sensitive   = true
+}
+
 
 
       
