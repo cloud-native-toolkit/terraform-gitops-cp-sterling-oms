@@ -90,3 +90,30 @@ variable "kubeseal_cert" {
   type        = string
   description = "The certificate/public key used to encrypt the sealed secrets"
 }
+
+
+variable "dbpassword" {
+  type        = string
+  description = "The console password"
+  sensitive   = true
+}
+
+variable "consoleadminpassword" {
+  type        = string
+  description = "The grafana user"
+  sensitive   = true
+}
+
+variable "consolenonadminpassword" {
+  type        = string
+  description = "The grafana password"
+  sensitive   = true
+}
+
+variable "kubeseal_cert" {
+  type        = string
+  description = "The certificate/public key used to encrypt the sealed secrets"
+  default     = ""
+}
+
+      

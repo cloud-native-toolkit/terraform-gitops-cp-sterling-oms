@@ -6,4 +6,7 @@ module "gitops-cp-sterling-oms" {
   server_name = module.gitops.server_name
   namespace = module.gitops_namespace.name
   kubeseal_cert = module.gitops.sealed_secrets_cert
+  consoleadminpassword = "password"
+  consolenonadminpassword = "password"
+  dbpassword = "omdb"
 }

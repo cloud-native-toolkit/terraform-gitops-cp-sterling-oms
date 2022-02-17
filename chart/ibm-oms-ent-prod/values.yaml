@@ -53,7 +53,7 @@ global:
   database:
     ## Database server IP/host
     ##
-    serverName: ''
+    serverName: '159.122.77.83'
 
     ## Database server port
     ##
@@ -61,10 +61,10 @@ global:
 
     ## Database name or catalog name
     ##
-    dbname: ''
+    dbname: 'omdb'
 
     ## Databse username
-    user: ''
+    user: 'omdb'
 
     ## DB Vendor DB2/Oracle. Defaults to 'DB2'
     ##
@@ -81,7 +81,7 @@ global:
     ## Database schema name.For Db2 it is defaulted as global.database.dbname
     ## and for Oracle it is defaulted as global.database.user
     ##
-    schema: ''
+    schema: 'omdb'
 
     ## SSL support for DB2. Default to 'false'
     ## If true, change the port to support db2 over SSL(defualt SSL port 50001)
