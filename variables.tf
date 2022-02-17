@@ -80,11 +80,11 @@ variable "server_name" {
   default     = "default"
 }
 
-variable "entitlement_key" {
+/*variable "entitlement_key" {
   type        = string
   description = "The entitlement key required to access Cloud Pak images"
   sensitive   = true
-}
+}*/
 
 variable "dbpassword" {
   type        = string
