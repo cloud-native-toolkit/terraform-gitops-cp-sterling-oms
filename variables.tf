@@ -86,12 +86,6 @@ variable "entitlement_key" {
   sensitive   = true
 }
 
-variable "kubeseal_cert" {
-  type        = string
-  description = "The certificate/public key used to encrypt the sealed secrets"
-}
-
-
 variable "dbpassword" {
   type        = string
   description = "The console password"
