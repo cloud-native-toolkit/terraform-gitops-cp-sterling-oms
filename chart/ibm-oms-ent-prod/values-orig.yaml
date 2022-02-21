@@ -10,12 +10,11 @@
 global:
   ## Set the value to True in order to accept the application license @ http://ibm.biz/oms-license
   ##
-  license: true
+  license: false
 
-  
   ## Set the value to True in order to accept the Store and Call Center application license @ http://ibm.biz/oms-apps-license
   ##
-  licenseStoreCallCenter: true
+  licenseStoreCallCenter: false
 
   ## This property can be used to override the <deployment name>-<chart name> portion of the resources generated
   ##
@@ -30,7 +29,7 @@ global:
     ## Example:
     ## repository: 'cp.icr.io/cp/ibm-oms-enterprise'
     ##
-    repository: 'cp.icr.io/cp/ibm-oms-enterprise'
+    repository: ''
 
     ## Agent image name. Defaults to `om-agent`
     ##
@@ -47,25 +46,25 @@ global:
 
   ## Secret name
   ##
-  appSecret: 'ibm-oms-ent-prod-oms-secret'
+  appSecret: ''
 
   ## Database parameters
   ##
   database:
     ## Database server IP/host
     ##
-    serverName: '159.122.77.83'
+    serverName: ''
 
     ## Database server port
     ##
-    port: 30245
+    port: 0
 
     ## Database name or catalog name
     ##
-    dbname: 'OMDB1'
+    dbname: ''
 
     ## Databse username
-    user: 'omdb'
+    user: ''
 
     ## DB Vendor DB2/Oracle. Defaults to 'DB2'
     ##
@@ -82,7 +81,7 @@ global:
     ## Database schema name.For Db2 it is defaulted as global.database.dbname
     ## and for Oracle it is defaulted as global.database.user
     ##
-    schema: 'OMDB1'
+    schema: ''
 
     ## SSL support for DB2. Default to 'false'
     ## If true, change the port to support db2 over SSL(defualt SSL port 50001)
@@ -91,7 +90,7 @@ global:
 
   ## Service account name. Defaults to 'default'
   ##
-  serviceAccountName: ibm-oms-ent-prod-ibm-oms-ent-prod
+  serviceAccountName: default
 
   ## Array of customer overrides properties as key=value
   ##
@@ -108,7 +107,7 @@ global:
 
         ## Trust the java CA certificates by default. The value is ignored incase storeLocation is provided
         #
-        trustJavaCACerts: false
+        trustJavaCACerts: true
 
         ## Directory where the server certificates are present. The value is ignored incase storeLocation is provided
         #
@@ -144,7 +143,7 @@ global:
       ## Example:
       ## name: oms-common
       ##
-      name: 'oms-pv'
+      name: ''
 
       ## Persistent Volume Access Mode. Defaults to 'ReadWriteMany'
       ##
@@ -160,7 +159,7 @@ global:
 
       ## Storage class for persistent volume claim
       ##
-      storageClassName: "portworx-db2-rwx-sc"
+      storageClassName:
 
     securityContext:
       ## File system group id to access the persistent volume. Defaults to 0
@@ -509,13 +508,13 @@ omserver:
     ## Example:
     ## name: om-agent
     ##
-    name: 'om-app'
+    name: ''
 
     ## Agent image tag
     ## Example:
     ## tag: 10.0.0.17
     ##
-    tag: '10.0.0.26-amd64'
+    tag: ''
 
     ## Specify a imagePullPolicy. Defaults to 'IfNotPresent'
     ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -644,7 +643,7 @@ omserver:
 datasetup:
   ## Load factory data
   ##
-  loadFactoryData: 'install'
+  loadFactoryData: ''
 
   ## Run factory data load. Defaults to 'create'
   ##
@@ -653,9 +652,8 @@ datasetup:
   fixPack:
     ## Load fix pack factory data
     ##
-    loadFPFactoryData: 'install'
+    loadFPFactoryData: ''
 
     ## Currently installed fix pack number beyond which fix pack factory setup needs to be applied
     ##
     installedFPNo: 0
-

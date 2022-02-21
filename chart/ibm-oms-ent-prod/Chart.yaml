@@ -1,5 +1,5 @@
 apiVersion: v2
-name: ibm-oms-ent-prod
+appVersion: 10.0.0
 dependencies:
 - alias: sch
   name: ibm-sch
@@ -12,7 +12,7 @@ description: IBM Order management Software Enterprise Edition v10 provides cross
   For additional details regarding install parameters check http://ibm.biz/oms-helm-readme.
   License By installing this product you accept the license terms http://ibm.biz/oms-license
   and http://ibm.biz/oms-apps-license.
+home: http://ibm.biz/oms-home
+name: ibm-oms-ent-prod
 type: application
 version: 6.0.2
-appVersion: 10.0.0
-
