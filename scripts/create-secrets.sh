@@ -6,6 +6,9 @@ DEST_DIR="$2"
 echo "in create-secrets"
 echo "${NAMESPACE}"
 echo "${DEST_DIR}"
+echo "${ADMIN_PASSWORD}"
+echo "${NON_ADMIN_PASSWORD}"
+echo "${DB_PASSWORD}"
 
 mkdir -p "${DEST_DIR}"
 
@@ -24,10 +27,10 @@ kubectl create secret generic ibm-oms-ent-prod-oms-secret \
 
 echo "secret ibm-oms-ent-prod-oms-secret created"
 
-kubectl adm policy add-scc-to-user anyuid system:serviceaccount:${NAMESPACE}:ibm-oms-ent-prod-ibm-oms-ent-prod
+#kubectl adm policy add-scc-to-user anyuid system:serviceaccount:${NAMESPACE}:ibm-oms-ent-prod-ibm-oms-ent-prod
 
-kubectl policy add-role-to-user edit system:serviceaccount:${NAMESPACE}:ibm-oms-ent-prod-ibm-oms-ent-prod
+#kubectl policy add-role-to-user edit system:serviceaccount:${NAMESPACE}:ibm-oms-ent-prod-ibm-oms-ent-prod
 
-kubectl secrets link ibm-oms-ent-prod-ibm-oms-ent-prod  ibm-registry --for=pull
+#kubectl secrets link ibm-oms-ent-prod-ibm-oms-ent-prod  ibm-registry --for=pull
 
 

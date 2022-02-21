@@ -90,18 +90,21 @@ variable "dbpassword" {
   type        = string
   description = "The console password"
   sensitive   = true
+  default     = "omdb"
 }
 
 variable "consoleadminpassword" {
   type        = string
   description = "The grafana user"
   sensitive   = true
+  default     = "password"
 }
 
 variable "consolenonadminpassword" {
   type        = string
   description = "The grafana password"
   sensitive   = true
+  default     = "password"
 }
 
 variable "entitlement_key" {
