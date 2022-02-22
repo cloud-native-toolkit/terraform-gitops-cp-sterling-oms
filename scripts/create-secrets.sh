@@ -26,11 +26,11 @@ kubectl create secret generic ibm-oms-ent-prod-oms-secret \
   --output=yaml > "${DEST_DIR}/ibm-oms-ent-prod-oms-secret.yaml"
 
 echo "secret ibm-oms-ent-prod-oms-secret created"
-
+#Done
 #kubectl adm policy add-scc-to-user anyuid system:serviceaccount:${NAMESPACE}:ibm-oms-ent-prod-ibm-oms-ent-prod
-
-kubectl policy add-role-to-user edit system:serviceaccount:${NAMESPACE}:ibm-oms-ent-prod-ibm-oms-ent-prod
-
+#TBD
+#kubectl policy add-role-to-user edit system:serviceaccount:${NAMESPACE}:ibm-oms-ent-prod-ibm-oms-ent-prod
+#Done
 #kubectl secrets link ibm-oms-ent-prod-ibm-oms-ent-prod  ibm-registry --for=pull
 
 
