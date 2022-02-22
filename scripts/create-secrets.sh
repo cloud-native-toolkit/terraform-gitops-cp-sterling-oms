@@ -29,7 +29,7 @@ echo "secret ibm-oms-ent-prod-oms-secret created"
 
 #kubectl adm policy add-scc-to-user anyuid system:serviceaccount:${NAMESPACE}:ibm-oms-ent-prod-ibm-oms-ent-prod
 
-#kubectl policy add-role-to-user edit system:serviceaccount:${NAMESPACE}:ibm-oms-ent-prod-ibm-oms-ent-prod
+kubectl policy add-role-to-user edit system:serviceaccount:${NAMESPACE}:ibm-oms-ent-prod-ibm-oms-ent-prod
 
 #kubectl secrets link ibm-oms-ent-prod-ibm-oms-ent-prod  ibm-registry --for=pull
 

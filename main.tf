@@ -12,7 +12,7 @@ locals {
   application_branch = "main"
   namespace = var.namespace
   layer_config = var.gitops_config[local.layer]
-  sa_name       = "ibm-oms-ent-prod-ibm-oms-ent-prod"
+  sa_name       = "ibm-oms-ent-prod-ibm-oms-ent-prod"  
 }
 
 module setup_clis {
@@ -51,6 +51,17 @@ module "service_account" {
   namespace = var.namespace
   name = local.sa_name
   sccs = ["anyuid", "privileged"]
+  rbac_rules = [{
+    apiGroups = [
+      ""
+    ]
+    resources = [
+      "secrets"      
+    ]
+    verbs = [
+      "*"
+    ]
+  }]
   server_name = var.server_name
 }
 
@@ -68,7 +79,7 @@ resource null_resource create_secrets_yaml {
   }
 }
 
-/*module seal_secrets {
+module seal_secrets {
   depends_on = [null_resource.create_secrets_yaml]
 
   source = "github.com/cloud-native-toolkit/terraform-util-seal-secrets.git?ref=v1.0.0"
@@ -77,13 +88,10 @@ resource null_resource create_secrets_yaml {
   dest_dir      = "${local.yaml_dir}/templates"
   kubeseal_cert = var.kubeseal_cert
   label         = local.name
-}*/
+}
 
 resource null_resource setup_gitops {
-  //depends_on = [null_resource.create_yaml,module.service_account,null_resource.create_secrets_yaml, module.seal_secrets]
-  depends_on = [null_resource.create_yaml,module.service_account,null_resource.create_secrets_yaml]
-  //depends_on = [null_resource.create_yaml,module.service_account]
-
+  depends_on = [null_resource.create_yaml,module.service_account,null_resource.create_secrets_yaml, module.seal_secrets]
   triggers = {
     name = local.name
     namespace = var.namespace
