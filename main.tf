@@ -54,7 +54,7 @@ module "service_account" {
   server_name = var.server_name
 }
 
-/*resource null_resource create_secrets_yaml {
+resource null_resource create_secrets_yaml {
   depends_on = [null_resource.create_yaml]
 
   provisioner "local-exec" {
@@ -77,11 +77,11 @@ module seal_secrets {
   dest_dir      = "${local.yaml_dir}/templates"
   kubeseal_cert = var.kubeseal_cert
   label         = local.name
-}*/
+}
 
 resource null_resource setup_gitops {
-  //depends_on = [null_resource.create_yaml,module.service_account,null_resource.create_secrets_yaml, module.seal_secrets]
-  depends_on = [null_resource.create_yaml,module.service_account]
+  depends_on = [null_resource.create_yaml,module.service_account,null_resource.create_secrets_yaml, module.seal_secrets]
+  //depends_on = [null_resource.create_yaml,module.service_account]
 
   triggers = {
     name = local.name
