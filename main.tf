@@ -68,7 +68,7 @@ resource null_resource create_secrets_yaml {
   }
 }
 
-module seal_secrets {
+/*module seal_secrets {
   depends_on = [null_resource.create_secrets_yaml]
 
   source = "github.com/cloud-native-toolkit/terraform-util-seal-secrets.git?ref=v1.0.0"
@@ -77,10 +77,11 @@ module seal_secrets {
   dest_dir      = "${local.yaml_dir}/templates"
   kubeseal_cert = var.kubeseal_cert
   label         = local.name
-}
+}*/
 
 resource null_resource setup_gitops {
-  depends_on = [null_resource.create_yaml,module.service_account,null_resource.create_secrets_yaml, module.seal_secrets]
+  //depends_on = [null_resource.create_yaml,module.service_account,null_resource.create_secrets_yaml, module.seal_secrets]
+  depends_on = [null_resource.create_yaml,module.service_account,null_resource.create_secrets_yaml]
   //depends_on = [null_resource.create_yaml,module.service_account]
 
   triggers = {
