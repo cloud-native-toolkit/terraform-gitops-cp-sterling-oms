@@ -63,7 +63,7 @@ module "service_account" {
     ]
   }]
   server_name = var.server_name
-  rbac_roles = ["edit"]
+  roles = ["edit"]
 }
 
 resource null_resource create_secrets_yaml {
