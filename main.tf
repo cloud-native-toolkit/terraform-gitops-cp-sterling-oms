@@ -30,7 +30,7 @@ module pull_secret {
   docker_username = "cp"
   docker_password = var.entitlement_key
   docker_server   = "cp.icr.io"
-  secret_name     = "ibm-registry"
+  secret_name     = "ibm-entitlement-key-s"
 }
 
 resource null_resource create_yaml {
@@ -63,6 +63,7 @@ module "service_account" {
     ]
   }]
   server_name = var.server_name
+  rbac_roles = ["edit"]
 }
 
 resource null_resource create_secrets_yaml {

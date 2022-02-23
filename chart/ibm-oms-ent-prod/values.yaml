@@ -653,7 +653,7 @@ datasetup:
   fixPack:
     ## Load fix pack factory data
     ##
-    loadFPFactoryData: 'install'
+    loadFPFactoryData: ''
 
     ## Currently installed fix pack number beyond which fix pack factory setup needs to be applied
     ##
