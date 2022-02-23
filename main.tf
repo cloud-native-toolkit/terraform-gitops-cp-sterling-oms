@@ -94,8 +94,8 @@ module seal_secrets {
   label         = local.name
 }
 
-resource null_resource setup_gitops {
-  depends_on = [null_resource.create_yaml,module.service_account,null_resource.create_secrets_yaml, module.seal_secrets]
+resource null_resource setup_gitops {  
+  depends_on = [null_resource.create_yaml, module.service_account, null_resource.create_secrets_yaml, module.seal_secrets]
   triggers = {
     name = local.name
     namespace = var.namespace
