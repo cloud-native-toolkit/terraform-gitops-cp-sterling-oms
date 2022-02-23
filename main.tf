@@ -61,9 +61,12 @@ module "service_account" {
     verbs = [
       "*"
     ]
+    roles = [
+      "edit"
+    ]
   }]
   server_name = var.server_name
-  roles = ["edit"]
+  
 }
 
 resource null_resource create_secrets_yaml {
