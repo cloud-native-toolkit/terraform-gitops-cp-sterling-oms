@@ -62,7 +62,7 @@ global:
 
     ## Database name or catalog name
     ##
-    dbname: 'OMDB1'
+    dbname: 'OMDB'
 
     ## Databse username
     user: 'omdb'
