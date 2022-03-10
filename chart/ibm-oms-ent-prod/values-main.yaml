@@ -1,0 +1,167 @@
+global:  
+  license: true
+  licenseStoreCallCenter: true  
+  fullNameOverride:  
+  nameOverride:
+  image:    
+    repository: 'cp.icr.io/cp/ibm-oms-enterprise'
+    agentName: om-agent    
+    tag: 10.0.0.26-amd64    
+    pullPolicy: IfNotPresent  
+  appSecret: 'ibm-oms-ent-prod-oms-secret'  
+  database:    
+    serverName: '159.122.77.83'    
+    port: 30245
+    dbname: 'OMDB1'
+    user: 'omdb'
+    dbvendor: DB2
+    datasourceName: jdbc/OMDS
+    systemPool: true
+    schema: 'OMDB1'
+    ssl: false  
+  serviceAccountName: ibm-oms-ent-prod-ibm-oms-ent-prod  
+  customerOverrides: []  
+  security:
+    ssl:
+      trustStore:        
+        storeLocation: ''
+        trustJavaCACerts: false
+        trustedCertDir: ''
+      keyStore:        
+        storeLocation: ''  
+  envs: []
+  persistence:
+    claims:      
+      name: 'oms-pv'
+      accessMode: ReadWriteMany
+      capacity: 10
+      capacityUnit: Gi
+      storageClassName: "portworx-db2-rwx-sc"
+    securityContext:      
+      fsGroup: 0
+      supplementalGroup: 0
+  mq:    
+    bindingConfigName: ''
+    bindingMountPath: /opt/ssfs/.bindings  
+  arch:
+    amd64: '2 - No preference'
+    ppc64le: '2 - No preference'
+  log:
+    format: 'json'  
+  resources:
+    requests:      
+      memory: 1024Mi
+      cpu: 0.5
+    limits:      
+      memory: 2048Mi
+      cpu: 1  
+  customConfigMaps: []
+  customSecrets: []
+appserver:  
+  deploymentStrategy: {}
+  exposeRestService: False
+  replicaCount: 1
+  image:    
+    tag: ''
+    pullPolicy: IfNotPresent    
+    names: []  
+  config:    
+    vendor: websphere
+    vendorFile: servers.properties
+    serverName: DefaultAppServer
+    jvm:      
+      xms: 1024m
+      xmx: 2048m
+      params: []    
+    database:      
+      maxPoolSize: 50
+      minPoolSize: 10    
+    corethreads: 20
+    maxthreads: 100
+    libertyServerXml: ''
+    libertyStartupWrapper: '/opt/ibm/helpers/runtime/docker-server.sh'  
+  livenessCheckBeginAfterSeconds: 900
+  livenessFailRestartAfterMinutes: 10
+  terminationGracePeriodSeconds: 60
+  service:
+    http:      
+      port: 9080
+    https:      
+      port: 9443
+    annotations: {}
+    labels: {}  
+  resources:
+    requests:      
+      memory: 2560Mi
+      cpu: 1
+    limits:      
+      memory: 3840Mi
+      cpu: 2
+  ingress:    
+    host: ''
+    ssl:      
+      enabled: true
+      secretname: ''    
+    controller: nginx    
+    contextRoots: ['smcfs', 'sbc', 'sma', 'isccs', 'wsc', 'adminCenter']
+    annotations: {}
+    labels: {}
+  podLabels: {}  
+  tolerations: []
+  nodeAffinity:    
+    requiredDuringSchedulingIgnoredDuringExecution: {}
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  podAffinity:    
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  podAntiAffinity:    
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+    replicaNotOnSameNode:      
+      mode: prefer
+      weightForPreference: 100
+omserver:  
+  deploymentStrategy: {}
+  image:    
+    name: 'om-app'
+    tag: '10.0.0.26-amd64'
+    pullPolicy: IfNotPresent
+  common:    
+    jvmArgs: "-Xms512m\ -Xmx1024m"
+    replicaCount: 1
+    resources:
+      requests:        
+        memory: 1024Mi
+        cpu: 0.5
+      limits:        
+        memory: 2048Mi
+        cpu: 1
+    readinessFailRestartAfterMinutes: 10
+    terminationGracePeriodSeconds: 60
+    podLabels: {}
+    tolerations: []
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution: {}
+      preferredDuringSchedulingIgnoredDuringExecution: []
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution: []
+      preferredDuringSchedulingIgnoredDuringExecution: []
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution: []
+      preferredDuringSchedulingIgnoredDuringExecution: []      
+      replicaNotOnSameNode:        
+        mode: prefer
+        weightForPreference: 100  
+  healthMonitor:    
+    deploy: false
+    jvmArgs:
+    replicaCount:    
+    resources:  
+  servers: []
+datasetup:  
+  loadFactoryData: 'install'
+  mode: create
+  fixPack:    
+    loadFPFactoryData: ''
+    installedFPNo: 0
+
