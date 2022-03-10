@@ -49,7 +49,7 @@ else
   echo "Found namespace: ${NAMESPACE}. Sleeping for 30 seconds to wait for everything to settle down"
   sleep 30
 fi
-sleep 10m
+#sleep 10m
 
 #DEPLOYMENT="${COMPONENT_NAME}-${BRANCH}"
 #count=0
