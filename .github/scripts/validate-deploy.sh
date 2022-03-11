@@ -49,26 +49,26 @@ else
   echo "Found namespace: ${NAMESPACE}. Sleeping for 30 seconds to wait for everything to settle down"
   sleep 30
 fi
-#sleep 10m
+sleep 5m
 
-#DEPLOYMENT="${COMPONENT_NAME}-${BRANCH}"
-#count=0
-#until kubectl get deployment "${DEPLOYMENT}" -n "${NAMESPACE}" || [[ $count -eq 20 ]]; do
-#  echo "Waiting for deployment/${DEPLOYMENT} in ${NAMESPACE}"
-#  count=$((count + 1))
-#  sleep 15
-#done
+DEPLOYMENT="${COMPONENT_NAME}-${BRANCH}"
+count=0
+until kubectl get deployment "${DEPLOYMENT}" -n "${NAMESPACE}" || [[ $count -eq 20 ]]; do
+  echo "Waiting for deployment/${DEPLOYMENT} in ${NAMESPACE}"
+  count=$((count + 1))
+  sleep 15
+done
 
-#if [[ $count -eq 20 ]]; then
-#  echo "Timed out waiting for deployment/${DEPLOYMENT} in ${NAMESPACE}"
-#  kubectl get all -n "${NAMESPACE}"
-#  exit 1
-#fi
+if [[ $count -eq 20 ]]; then
+  echo "Timed out waiting for deployment/${DEPLOYMENT} in ${NAMESPACE}"
+  kubectl get all -n "${NAMESPACE}"
+  exit 1
+fi
 
 #kubectl rollout status "deployment/${DEPLOYMENT}" -n "${NAMESPACE}" || exit 1
 
-kubectl get pods | grep ibm-oms-ent-prod-datasetup -n "${NAMESPACE}" || exit 1
-echo "Database is being populated"
+#kubectl get pods | grep ibm-oms-ent-prod-datasetup -n "${NAMESPACE}" || exit 1
+#echo "Database is being populated"
 
 cd ..
 rm -rf .testrepo
