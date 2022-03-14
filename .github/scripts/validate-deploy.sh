@@ -49,6 +49,7 @@ else
   echo "Found namespace: ${NAMESPACE}. Sleeping for 30 seconds to wait for everything to settle down"
   sleep 30
 fi
+
 sleep 15m
 
 DEPLOYMENT="sterling-ibm-oms-ent-prod-appserver-om-app"
