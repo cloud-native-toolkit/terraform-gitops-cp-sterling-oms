@@ -52,7 +52,7 @@ fi
 
 sleep 15m
 
-DEPLOYMENT="sterling-ibm-oms-ent-prod-appserver-om-app"
+DEPLOYMENT="ibm-oms-ent-prod-appserver-om-app"
 count=0
 until kubectl get deployment "${DEPLOYMENT}" -n "${NAMESPACE}" || [[ $count -eq 20 ]]; do
   echo "Waiting for deployment/${DEPLOYMENT} in ${NAMESPACE}"
