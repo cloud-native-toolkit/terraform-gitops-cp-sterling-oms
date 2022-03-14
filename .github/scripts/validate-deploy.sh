@@ -49,9 +49,9 @@ else
   echo "Found namespace: ${NAMESPACE}. Sleeping for 30 seconds to wait for everything to settle down"
   sleep 30
 fi
-sleep 5m
+sleep 15m
 
-DEPLOYMENT="${COMPONENT_NAME}-${BRANCH}"
+DEPLOYMENT="sterling-ibm-oms-ent-prod-appserver-om-app"
 count=0
 until kubectl get deployment "${DEPLOYMENT}" -n "${NAMESPACE}" || [[ $count -eq 20 ]]; do
   echo "Waiting for deployment/${DEPLOYMENT} in ${NAMESPACE}"
