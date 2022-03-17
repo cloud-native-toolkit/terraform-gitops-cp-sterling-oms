@@ -8,6 +8,8 @@
 # Declare variables to be passed into your templates.
 
 global:
+  #jobName: "oms-job"
+  #ConfigmapName: "oms-configmap"
   ## Set the value to True in order to accept the application license @ http://ibm.biz/oms-license
   ##
   license: true
