@@ -50,7 +50,7 @@ else
   sleep 30
 fi
 
-sleep 15m
+sleep 10m
 
 DEPLOYMENT="ibm-oms-ent-prod-appserver-om-app"
 count=0
