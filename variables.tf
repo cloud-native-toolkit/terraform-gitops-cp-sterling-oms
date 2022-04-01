@@ -113,33 +113,6 @@ variable "entitlement_key" {
   sensitive   = true
 }
 
-variable "dbpassword" {
-  type        = string
-  description = "The console password"
-  sensitive   = true
-  default     = "omdb"
-}
-
-variable "consoleadminpassword" {
-  type        = string
-  description = "The grafana user"
-  sensitive   = true
-  default     = "password"
-}
-
-variable "consolenonadminpassword" {
-  type        = string
-  description = "The grafana password"
-  sensitive   = true
-  default     = "password"
-}
-
-variable "entitlement_key" {
-  type        = string
-  description = "The entitlement key required to access Cloud Pak images"
-  sensitive   = true
-}
-
 variable "agent_image_tag" {
   type        = string
   description = "The tag of the agent image"
