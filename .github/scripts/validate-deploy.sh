@@ -66,7 +66,7 @@ if [[ $count -eq 20 ]]; then
   exit 1
 fi
 
-#kubectl rollout status "deployment/${DEPLOYMENT}" -n "${NAMESPACE}" || exit 1
+kubectl rollout status "deployment/${DEPLOYMENT}" -n "${NAMESPACE}" || exit 1
 
 #kubectl get pods | grep ibm-oms-ent-prod-datasetup -n "${NAMESPACE}" || exit 1
 #echo "Database is being populated"
