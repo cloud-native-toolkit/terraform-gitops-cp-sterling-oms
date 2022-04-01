@@ -6,19 +6,19 @@ locals {
   secret_dir         = "${path.cwd}/.tmp/${local.name}/secrets"
   chart_dir          = "${path.module}/chart/ibm-oms-ent-prod"
   values_content = {
-    global{
+   global = {
   license = true
   licenseStoreCallCenter = true
   fullNameOverride = ""
   nameOverride = ""
-  image{    
+  image = {    
     repository = "cp.icr.io/cp/ibm-oms-enterprise"
     agentName = om-agent
     tag = var.agent_image_tag
     pullPolicy = Always
   } 
   appSecret = "ibm-oms-ent-prod-oms-secret"
-  database{    
+  database = {    
     serverName = var.db_server
     port = var.db_port
     dbname = var.db_name
@@ -31,76 +31,76 @@ locals {
   }
   serviceAccountName = "ibm-oms-ent-prod-ibm-oms-ent-prod"  
   customerOverrides = []
-  security{
-    ssl{
-      trustStore{        
+  security = {
+    ssl = {
+      trustStore = {        
         storeLocation = ""
         trustJavaCACerts = "false"
         trustedCertDir = ""
       }
-      keyStore{        
+      keyStore = {        
         storeLocation = ""
       }
     }
   }  
   envs = []
-  persistence{
-    claims{      
-      name = "oms1-pv"
+  persistence = {
+    claims = {      
+      name = "oms-pv"
       accessMode = "ReadWriteMany"
       capacity = "10"
       capacityUnit = "Gi"
       storageClassName = "portworx-db2-rwx-sc"
     }
-    securityContext{      
+    securityContext = {      
       fsGroup = "0"
       supplementalGroup = "0"
     }
   }
-  mq{    
+  mq = {    
     bindingConfigName = ""
     bindingMountPath = "/opt/ssfs/.bindings"
   }
-  arch{
+  arch = {
     amd64 = "2 - No preference"
     ppc64le = "2 - No preference"
   }
-  log{
+  log = {
     format = "json"
   }
-  resources{
+  resources = {
     requests = ""      
       memory = "1024Mi"
       cpu = "0.5"
-    limits{      
+    limits = {      
       memory = "2048Mi"
       cpu = "1"
     }
   }  
   customConfigMaps = []
   customSecrets = []
-appserver{
-  deploymentStrategy = {}
+appserver = {
+  deploymentStrategy =  = {}
   exposeRestService = "False"
   replicaCount = "1"
-  image{    
+  image = {    
     tag = var.appserver_image_tag
     pullPolicy = "Always"
-    names{
+    names = {
       - name = "om-app"    
         tag = var.appserver_image_tag
     } 
   }   
-  config{    
+  config = {    
     vendor =  "websphere"
     vendorFile = "servers.properties"
     serverName = "DefaultAppServer"
-    jvm{      
+    jvm = {      
       xms = "2048m"
       xmx = "2048m"
       params = []
     }
-    database{      
+    database = {      
       maxPoolSize = "50"
       minPoolSize = "10"
     }
@@ -112,72 +112,72 @@ appserver{
   livenessCheckBeginAfterSeconds = "900"
   livenessFailRestartAfterMinutes = "10"
   terminationGracePeriodSeconds = "60"
-  service{
-    http{      
+  service = {
+    http = {      
       port = "9080"
     }
-    https{      
+    https = {      
       port = "9443"
     }
     annotations = {}
     labels = {}
   }
-  resources{
-    requests{      
+  resources = {
+    requests = {      
       memory = "2560Mi"
       cpu = "1"
     }
-    limits{      
+    limits = {      
       memory = "3840Mi"
       cpu = "2"
     }
   }
-  ingress{    
+  ingress = {    
     host = var.ingress_host
-    ssl{      
+    ssl = {      
       enabled = "false"
       secretname = ""
     }
     controller = "nginx"
-    contextRoots = ['smcfs', 'sbc', 'sma', 'isccs', 'wsc', 'adminCenter']
+    contextRoots = ["smcfs", "sbc", "sma", "isccs", "wsc", "adminCenter"]
     annotations = {}
     labels = {}
   }
   podLabels = {}
   tolerations = []
-  nodeAffinity{    
+  nodeAffinity = {    
     requiredDuringSchedulingIgnoredDuringExecution = {}
     preferredDuringSchedulingIgnoredDuringExecution = []
   }
-  podAffinity{   
+  podAffinity = {   
     requiredDuringSchedulingIgnoredDuringExecution = []
     preferredDuringSchedulingIgnoredDuringExecution = []
   }
-  podAntiAffinity{    
+  podAntiAffinity = {    
     requiredDuringSchedulingIgnoredDuringExecution = []
     preferredDuringSchedulingIgnoredDuringExecution = []
-    replicaNotOnSameNode{      
+    replicaNotOnSameNode = {      
       mode = "prefer"
       weightForPreference = "100"
     }
   }
   }
-omserver{
+omserver = {
   deploymentStrategy = {}
-  image{ 
+  image = { 
     name = "om-agent"    
     tag = var.agent_image_tag
     pullPolicy = "Always"
   }
-  common{
+  common = {
     jvmArgs = "-Xms512m\ -Xmx1024m"
     replicaCount = "1"
-    resources{
-      requests{        
+    resources = {
+      requests = {        
         memory = "1024Mi"
         cpu = "0.5"
       }
-      limits{        
+      limits = {        
         memory = "2048Mi"
         cpu = ""
       }
@@ -186,41 +186,41 @@ omserver{
     terminationGracePeriodSeconds =  "60"
     podLabels =  {}
     tolerations =  []
-    nodeAffinity{
+    nodeAffinity = {
       requiredDuringSchedulingIgnoredDuringExecution =  {}
       preferredDuringSchedulingIgnoredDuringExecution =  []
     }
-    podAffinity{
+    podAffinity = {
       requiredDuringSchedulingIgnoredDuringExecution =  []
       preferredDuringSchedulingIgnoredDuringExecution =  []
     }
-    podAntiAffinity{
+    podAntiAffinity = {
       requiredDuringSchedulingIgnoredDuringExecution =  []
       preferredDuringSchedulingIgnoredDuringExecution =  []
-      replicaNotOnSameNode{        
+      replicaNotOnSameNode = {        
         mode =  "prefer"
         weightForPreference =  "100"
       }
     }
   }
-  healthMonitor{  
+  healthMonitor = {  
     deploy = "false"
-    jvmArgs{
+    jvmArgs = {
     replicaCount = ""
     resources = ""
     }
   }
   servers = []
 }
-datasetup{
+datasetup = {
   loadFactoryData = "donotinstall"
   mode = "create"
-  fixPack{   
+  fixPack = {   
     loadFPFactoryData = ""
     installedFPNo = "0"
   }
 }
-}  
+}
   }
   layer = "services"
   type  = "instances"
