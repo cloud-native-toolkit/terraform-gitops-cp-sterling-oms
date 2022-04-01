@@ -170,7 +170,7 @@ omserver = {
     pullPolicy = "Always"
   }
   common = {
-    jvmArgs = "-Xms512m\ -Xmx1024m"
+    jvmArgs = "-Xms512m -Xmx1024m"
     replicaCount = "1"
     resources = {
       requests = {        
