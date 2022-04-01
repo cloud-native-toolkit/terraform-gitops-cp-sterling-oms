@@ -13,9 +13,9 @@ locals {
   nameOverride = ""
   image = {    
     repository = "cp.icr.io/cp/ibm-oms-enterprise"
-    agentName = om-agent
+    agentName = "om-agent"
     tag = var.agent_image_tag
-    pullPolicy = Always
+    pullPolicy = "Always"
   } 
   appSecret = "ibm-oms-ent-prod-oms-secret"
   database = {    
@@ -26,7 +26,7 @@ locals {
     dbvendor = "DB2"
     datasourceName =  "jdbc/OMDS"
     systemPool =  "true"
-    schema = var.db_schema
+    schema = var.schema_name
     ssl =  "false"
   }
   serviceAccountName = "ibm-oms-ent-prod-ibm-oms-ent-prod"  
@@ -87,7 +87,7 @@ appserver = {
     tag = var.appserver_image_tag
     pullPolicy = "Always"
     names = {
-      - name = "om-app"    
+        name = "om-app"    
         tag = var.appserver_image_tag
     } 
   }   
