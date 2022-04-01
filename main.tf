@@ -80,7 +80,7 @@ locals {
   customConfigMaps = []
   customSecrets = []
 appserver = {
-  deploymentStrategy =  = {}
+  deploymentStrategy = {}
   exposeRestService = "False"
   replicaCount = "1"
   image = {    
