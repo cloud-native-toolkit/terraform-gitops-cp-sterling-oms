@@ -113,6 +113,81 @@ variable "entitlement_key" {
   sensitive   = true
 }
 
+variable "dbpassword" {
+  type        = string
+  description = "The console password"
+  sensitive   = true
+  default     = "omdb"
+}
+
+variable "consoleadminpassword" {
+  type        = string
+  description = "The grafana user"
+  sensitive   = true
+  default     = "password"
+}
+
+variable "consolenonadminpassword" {
+  type        = string
+  description = "The grafana password"
+  sensitive   = true
+  default     = "password"
+}
+
+variable "entitlement_key" {
+  type        = string
+  description = "The entitlement key required to access Cloud Pak images"
+  sensitive   = true
+}
+
+variable "agent_image_tag" {
+  type        = string
+  description = "The tag of the agent image"
+  default     = "10.0.0.26-amd64"
+}
+
+variable "appserver_image_tag" {
+  type        = string
+  description = "The tag of the agent image"
+  default     = "10.0.0.26-amd64"
+}
+
+variable "db_server" {
+  type        = string
+  description = "Host IP of DB"
+  default     = "159.122.77.83"
+}
+
+variable "db_port" {
+  type        = string
+  description = "Port for DB Server"
+  default     = "30245"
+}
+
+variable "db_name" {
+  type        = string
+  description = "Database name"
+  default     = "OMDB"
+}
+
+variable "schema_name" {
+  type        = string
+  description = "Schema name for OMS database"
+  default     = "OMDB5"
+}
+
+variable "db_user" {
+  type        = string
+  description = "User name for DB"
+  default     = "omdb"
+}
+
+variable "ingress_host" {
+  type        = string
+  description = "Ingress host name"
+  default     = "toolkit-dev-ocp48-gitops2-2ab66b053c14936810608de9a1deac9c-0000.us-east.containers.appdomain.cloud"
+}
+
 
 
 
