@@ -66,7 +66,7 @@ module "service_account" {
     ]
   }]
   server_name = var.server_name
-  
+  pull_secrets = ["ibm-entitlement-key"]
 }
 
 resource null_resource create_secrets_yaml {
