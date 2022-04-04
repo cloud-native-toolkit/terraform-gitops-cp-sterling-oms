@@ -5,8 +5,7 @@ locals {
   service_url   = "http://${local.name}.${var.namespace}"
   secret_dir         = "${path.cwd}/.tmp/${local.name}/secrets"
   chart_dir          = "${path.module}/chart/ibm-oms-ent-prod"
-  values_content = {
-    global = {
+  global_config    = {    
       license = true
       licenseStoreCallCenter = true
       fullNameOverride = ""
@@ -79,9 +78,10 @@ locals {
       }  
       customConfigMaps = []
       customSecrets = []
-    }
-    appserver = {
-      deploymentStrategy = {}
+  } 
+
+  appserver_config = {
+    deploymentStrategy = {}
       exposeRestService = "False"
       replicaCount = "1"
       image = {    
@@ -164,9 +164,12 @@ locals {
           weightForPreference = "100"
         }
       }
-    }
-    omserver = {
-      deploymentStrategy = {}
+     
+
+  }
+
+  omserver_config = {
+    deploymentStrategy = {}
       image = { 
         name = "om-agent"    
         tag = var.agent_image_tag
@@ -213,16 +216,28 @@ locals {
         resources = ""
       }
       servers = []
-    }
-    datasetup = {
-      loadFactoryData = "donotinstall"
+
+  }
+
+  datasetup_config = {
+    loadFactoryData = "donotinstall"
       mode = "create"
       fixPack = {  
         loadFPFactoryData = ""
         installedFPNo = "0"
       }
-    }
+  } 
+    
+  values_content = {    
+    appserver = local.appserver_config
+    omserver = local.omserver_config
+    datasetup = local.datasetup_config
   }
+
+  values_server_content = {
+    global = local.global_config
+  }
+
   layer = "services"
   type  = "instances"
   application_branch = "main"
@@ -255,6 +270,7 @@ resource null_resource create_yaml {
 
     environment = {
       VALUES_CONTENT = yamlencode(local.values_content)
+      VALUES_SERVER_CONTENT = yamlencode(local.values_server_content)
     }
   }
 }

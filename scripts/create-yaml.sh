@@ -32,9 +32,9 @@ if [[ -n "${VALUES_CONTENT}" ]]; then
   echo "${VALUES_CONTENT}" > "${DEST_DIR}/values.yaml"
 fi
 
-#if [[ -n "${VALUES_SERVER_CONTENT}" ]] && [[ -n "${SERVER_VALUES_FILE}" ]]; then
-  #echo "${VALUES_SERVER_CONTENT}" > "${DEST_DIR}/${SERVER_VALUES_FILE}"
-#fi
+if [[ -n "${VALUES_SERVER_CONTENT}" ]] && [[ -n "${SERVER_VALUES_FILE}" ]]; then
+  echo "${VALUES_SERVER_CONTENT}" > "${DEST_DIR}/${SERVER_VALUES_FILE}"
+fi
 
 
 # Search for OMS Org and Domain here and update here in VALUES.YAML using YQ
