@@ -222,7 +222,7 @@ locals {
         installedFPNo = "0"
       }
     }
-}
+  }
   layer = "services"
   type  = "instances"
   application_branch = "main"
