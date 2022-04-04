@@ -228,7 +228,8 @@ locals {
       }
   } 
     
-  values_content = {    
+  values_content = {
+    global = local.global_config    
     appserver = local.appserver_config
     omserver = local.omserver_config
     datasetup = local.datasetup_config
