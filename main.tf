@@ -211,7 +211,7 @@ locals {
       healthMonitor = {  
         deploy = false
         jvmArgs = ""
-        replicaCount = ''
+        replicaCount = 0
         resources = {}
       }
       servers = []
