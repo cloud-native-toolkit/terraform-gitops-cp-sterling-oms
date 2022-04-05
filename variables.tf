@@ -132,7 +132,7 @@ variable "db_server" {
 }
 
 variable "db_port" {
-  type        = integer
+  type        = number
   description = "Port for DB Server"
   default     = 30245
 }
