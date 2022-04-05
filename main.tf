@@ -24,9 +24,9 @@ locals {
         user = var.db_user
         dbvendor = "DB2"
         datasourceName =  "jdbc/OMDS"
-        systemPool =  "true"
+        systemPool =  true
         schema = var.schema_name
-        ssl =  "false"
+        ssl =  false    
       }
       serviceAccountName = "ibm-oms-ent-prod-ibm-oms-ent-prod"  
       customerOverrides = []
@@ -34,7 +34,7 @@ locals {
         ssl = {
           trustStore = {        
             storeLocation = ""
-            trustJavaCACerts = "false"
+            trustJavaCACerts = false
             trustedCertDir = ""
           }
           keyStore = {        
@@ -47,13 +47,13 @@ locals {
         claims = {      
           name = "oms-pv"
           accessMode = "ReadWriteMany"
-          capacity = "10"
+          capacity = 10
           capacityUnit = "Gi"
           storageClassName = "portworx-db2-rwx-sc"
         }
         securityContext = {      
-          fsGroup = "0"
-          supplementalGroup = "0"
+          fsGroup = 0
+          supplementalGroup = 0
         }
       }
       mq = {    
@@ -68,12 +68,13 @@ locals {
         format = "json"
       }
       resources = {
-        requests = ""      
+        requests = {      
           memory = "1024Mi"
-          cpu = "0.5"
+          cpu = 0.5
+        }
         limits = {      
           memory = "2048Mi"
-          cpu = "1"
+          cpu = 1
         }
       }  
       customConfigMaps = []
@@ -82,8 +83,8 @@ locals {
 
   appserver_config = {
     deploymentStrategy = {}
-      exposeRestService = "False"
-      replicaCount = "1"
+      exposeRestService = False
+      replicaCount = 1
       image = {    
         tag = var.appserver_image_tag
         pullPolicy = "Always"
@@ -104,23 +105,23 @@ locals {
           params = []
         }
         database = {      
-          maxPoolSize = "50"
-          minPoolSize = "10"
+          maxPoolSize = 50
+          minPoolSize = 10
         }
-        corethreads = "20"
-        maxthreads = "100"
+        corethreads = 20
+        maxthreads = 100
         libertyServerXml = ""
         libertyStartupWrapper = "/opt/ibm/helpers/runtime/docker-server.sh"
       }
-      livenessCheckBeginAfterSeconds = "900"
-      livenessFailRestartAfterMinutes = "10"
-      terminationGracePeriodSeconds = "60"
+      livenessCheckBeginAfterSeconds = 900
+      livenessFailRestartAfterMinutes = 10
+      terminationGracePeriodSeconds = 60
       service = {
         http = {      
-          port = "9080"
+          port = 9080
         }
         https = {      
-          port = "9443"
+          port = 9443
         }
         annotations = {}
         labels = {}
@@ -128,17 +129,17 @@ locals {
       resources = {
         requests = {      
           memory = "2560Mi"
-          cpu = "1"
+          cpu = 1
         }
         limits = {      
           memory = "3840Mi"
-          cpu = "2"
+          cpu = 2
         }
       }
       ingress = {    
         host = var.ingress_host
         ssl = {      
-          enabled = "false"
+          enabled = false
           secretname = ""
         }
         controller = "nginx"
@@ -161,11 +162,9 @@ locals {
         preferredDuringSchedulingIgnoredDuringExecution = []
         replicaNotOnSameNode = {      
           mode = "prefer"
-          weightForPreference = "100"
+          weightForPreference = 100
         }
       }
-     
-
   }
 
   omserver_config = {
@@ -177,19 +176,19 @@ locals {
       }
       common = {
         jvmArgs = "-Xms512m -Xmx1024m"
-        replicaCount = "1"
+        replicaCount = 1
         resources = {
           requests = {        
             memory = "1024Mi"
-            cpu = "0.5"
+            cpu = 0.5
           }
           limits = {        
             memory = "2048Mi"
             cpu = ""
           }
         }
-        readinessFailRestartAfterMinutes = "10"
-        terminationGracePeriodSeconds =  "60"
+        readinessFailRestartAfterMinutes = 10
+        terminationGracePeriodSeconds =  60
         podLabels =  {}
         tolerations =  []
         nodeAffinity = {
@@ -205,15 +204,15 @@ locals {
           preferredDuringSchedulingIgnoredDuringExecution =  []
           replicaNotOnSameNode = {        
             mode =  "prefer"
-            weightForPreference =  "100"
+            weightForPreference =  100
           }
         }
       }
       healthMonitor = {  
-        deploy = "false"
+        deploy = false
         jvmArgs = ""
-        replicaCount = ""
-        resources = ""
+        replicaCount = ''
+        resources = {}
       }
       servers = []
 
@@ -224,7 +223,7 @@ locals {
       mode = "create"
       fixPack = {  
         loadFPFactoryData = ""
-        installedFPNo = "0"
+        installedFPNo = 0
       }
   } 
     

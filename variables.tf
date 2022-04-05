@@ -132,9 +132,9 @@ variable "db_server" {
 }
 
 variable "db_port" {
-  type        = string
+  type        = integer
   description = "Port for DB Server"
-  default     = "30245"
+  default     = 30245
 }
 
 variable "db_name" {
