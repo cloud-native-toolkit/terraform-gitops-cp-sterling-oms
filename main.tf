@@ -83,7 +83,7 @@ locals {
 
   appserver_config = {
     deploymentStrategy = {}
-      exposeRestService = False
+      exposeRestService = "False"
       replicaCount = 1
       image = {    
         tag = var.appserver_image_tag
