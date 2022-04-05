@@ -83,7 +83,7 @@ locals {
 
   appserver_config = {
     deploymentStrategy = {}
-      exposeRestService = "False"
+      exposeRestService = false
       replicaCount = 1
       image = {    
         tag = var.appserver_image_tag
@@ -184,7 +184,7 @@ locals {
           }
           limits = {        
             memory = "2048Mi"
-            cpu = ""
+            cpu = 1
           }
         }
         readinessFailRestartAfterMinutes = 10
