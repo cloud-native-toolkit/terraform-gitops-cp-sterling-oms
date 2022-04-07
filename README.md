@@ -1,8 +1,10 @@
 #  Sterling OMS gitops module
 
-Module to provision a sterling OMS repo with the resources necessary to provision on a cluster. In order to deploy Sterling OMS the following steps are performed:
+The Sterling Order Management Software images are Red Hat container certified and offer a more simple and efficient way to deploy, manage, and scale secure enterprise-grade software across multiple environments. This Module provisions a sterling OMS repo with the resources necessary to deploy on a cluster. In order to deploy Sterling OMS the following steps are performed:
 
 1. Add the Sterling OMS chart to the gitops repo (charts/ibm-oms-ent-prod)
+
+This module requires DB2 installed in the cluster
 
 ## Software dependencies
 
