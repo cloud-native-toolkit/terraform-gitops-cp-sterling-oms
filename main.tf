@@ -226,17 +226,12 @@ locals {
         loadFPFactoryData = ""
         installedFPNo = 0
       }
-  } 
-    
+  }     
   values_content = {
     global = local.global_config    
     appserver = local.appserver_config
     omserver = local.omserver_config
     datasetup = local.datasetup_config
-  }
-
-  values_server_content = {
-    global = local.global_config
   }
 
   layer = "services"
@@ -270,8 +265,7 @@ resource null_resource create_yaml {
     command = "${path.module}/scripts/create-yaml.sh '${local.name}' '${local.yaml_dir}'"
 
     environment = {
-      VALUES_CONTENT = yamlencode(local.values_content)
-      VALUES_SERVER_CONTENT = yamlencode(local.values_server_content)
+      VALUES_CONTENT = yamlencode(local.values_content)      
     }
   }
 }

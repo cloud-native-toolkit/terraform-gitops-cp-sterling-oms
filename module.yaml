@@ -1,6 +1,6 @@
-name: gitops-cp-sterling-oms
+name: "gitops-cp-sterling-oms"
 type: gitops
-description: "Module to populate a gitops repo with the resources to provision OMS"
+description: ""
 tags:
   - tools
   - gitops

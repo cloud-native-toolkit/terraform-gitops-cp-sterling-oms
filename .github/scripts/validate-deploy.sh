@@ -50,15 +50,14 @@ else
   sleep 30
 fi
 
-sleep 3m
+#sleep 3m
 
 DEPLOYMENT="ibm-oms-ent-prod-appserver-om-app"
 count=0
 until kubectl get deployment "${DEPLOYMENT}" -n "${NAMESPACE}" || [[ $count -eq 20 ]]; do
   echo "Waiting for deployment/${DEPLOYMENT} in ${NAMESPACE}"
   count=$((count + 1))
-  #sleep 15
-  sleep 9m
+  sleep 9m  
 done
 
 if [[ $count -eq 20 ]]; then
