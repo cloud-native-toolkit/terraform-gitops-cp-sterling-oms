@@ -68,11 +68,12 @@ fi
 
 DEPLOYMENT="ibm-oms-ent-prod-appserver-om-app"
 #count=0
-until kubectl get pods -l appname=om-app|awk "{print $3}" -eq "Running" ; do
+until kubectl get pods -l appname=om-app|awk "{print $3}" == "Running" ; do
   echo "Waiting for appserver to run"
 #  count=$((count + 1))
   sleep 15
 done
+
 
 
 
