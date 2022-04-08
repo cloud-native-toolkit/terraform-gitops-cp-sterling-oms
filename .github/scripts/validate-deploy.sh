@@ -52,19 +52,29 @@ fi
 
 #sleep 3m
 
+#DEPLOYMENT="ibm-oms-ent-prod-appserver-om-app"
+#count=0
+#until kubectl get deployment "${DEPLOYMENT}" -n "${NAMESPACE}" || [[ $count -eq 20 ]]; do
+#  echo "Waiting for deployment/${DEPLOYMENT} in ${NAMESPACE}"
+#  count=$((count + 1))
+#  sleep 15 
+#done
+
+#if [[ $count -eq 20 ]]; then
+#  echo "Timed out waiting for deployment/${DEPLOYMENT} in ${NAMESPACE}"
+#  kubectl get all -n "${NAMESPACE}"
+#  exit 1
+#fi
+
 DEPLOYMENT="ibm-oms-ent-prod-appserver-om-app"
-count=0
-until kubectl get deployment "${DEPLOYMENT}" -n "${NAMESPACE}" || [[ $count -eq 20 ]]; do
-  echo "Waiting for deployment/${DEPLOYMENT} in ${NAMESPACE}"
-  count=$((count + 1))
-  sleep 15 
+#count=0
+until kubectl get pods -l appname=om-app|awk "{print $3}" -eq "Running" ; do
+  echo "Waiting for appserver to run"
+#  count=$((count + 1))
+  sleep 15
 done
 
-if [[ $count -eq 20 ]]; then
-  echo "Timed out waiting for deployment/${DEPLOYMENT} in ${NAMESPACE}"
-  kubectl get all -n "${NAMESPACE}"
-  exit 1
-fi
+
 
 kubectl rollout status "deployment/${DEPLOYMENT}" -n "${NAMESPACE}" || exit 1
 
