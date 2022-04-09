@@ -69,15 +69,11 @@ fi
 DEPLOYMENT="ibm-oms-ent-prod-appserver-om-app"
 #count=0
 
-#POD=$(kubectl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' -l appname=om-app)
-#status=$(kubectl get pod ${POD} -o jsonpath={.status.phase})
-
-status = 0
-until [ $status = "Running" ] ; do
-sleep 15
 POD=$(kubectl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' -l appname=om-app)
-status=$(kubectl get pod ${POD} -o jsonpath={.status.phase})
+until [ $(kubectl get pod ${POD} -o jsonpath={.status.phase}) = "Running" ]
+do
 echo "Waiting for appserver to run"
+sleep 15
 done
 
 kubectl rollout status "deployment/${DEPLOYMENT}" -n "${NAMESPACE}" || exit 1
