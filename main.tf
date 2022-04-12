@@ -288,10 +288,11 @@ module "service_account" {
     verbs = [
       "*"
     ]
-    roles = [
+    
+  }]
+  roles = [
       "edit"
     ]
-  }]
   server_name = var.server_name
   pull_secrets = ["ibm-entitlement-key"]
 }
