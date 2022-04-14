@@ -291,7 +291,7 @@ module "service_account" {
     
   }]
   rbac_roles = [{
- #   name = "edit"
+    
   }]
   rbac_cluster_scope = true
   server_name = var.server_name
