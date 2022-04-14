@@ -286,7 +286,7 @@ module "service_account" {
   }]
 
   rbac_roles = [{
-    name = "edit"
+    name = "update"
   }]
 
   rbac_cluster_scope = true
