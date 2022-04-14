@@ -279,6 +279,23 @@ module "service_account" {
   name = local.sa_name
   sccs = ["anyuid", "privileged"]
 
+  rbac_rules = [{
+    apiGroups = [
+      ""
+    ]
+    resources = [
+      "secrets"      
+    ]
+    verbs = [
+      "*"
+    ]
+    
+  }]
+  rbac_roles = [{
+    name = "edit"
+  
+  }]
+
   rbac_cluster_scope = true
   server_name = var.server_name
   pull_secrets = ["ibm-entitlement-key"]
