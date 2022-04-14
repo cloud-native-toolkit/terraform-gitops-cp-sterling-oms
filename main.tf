@@ -280,20 +280,13 @@ module "service_account" {
   sccs = ["anyuid", "privileged"]
 
   rbac_rules = [{
-    apiGroups = [
-      ""
-    ]
-    resources = [
-      "secrets"      
-    ]
-    verbs = [
-      "*"
-    ]
-    
+    apiGroups = [""]
+    resources = ["secrets"]
+    verbs = [ "*" ]
   }]
+
   rbac_roles = [{
     name = "edit"
-  
   }]
 
   rbac_cluster_scope = true
