@@ -281,7 +281,7 @@ module "service_account" {
 
   rbac_rules = [{
     apiGroups = [""]
-    resources = ["secrets"]
+    resources = ["secrets","configmaps"]
     verbs = [ "*" ]
   }]
 
