@@ -84,7 +84,7 @@ variable "dbpassword" {
   type        = string
   description = "The console password"
   sensitive   = true
-  default     = "omdb"
+  default     = "BOwnzJHBH9kz122G"
 }
 
 variable "consoleadminpassword" {
@@ -122,31 +122,31 @@ variable "appserver_image_tag" {
 variable "db_server" {
   type        = string
   description = "Host IP of DB"
-  default     = "159.122.77.83"
+  default     = "f98323d9-430b-4961-88ec-384a0a0bdf34.c8l9ggsd0kmvoig3l8kg.databases.appdomain.cloud"
 }
 
 variable "db_port" {
   type        = number
   description = "Port for DB Server"
-  default     = 30245
+  default     = 32626
 }
 
 variable "db_name" {
   type        = string
   description = "Database name"
-  default     = "OMDB"
+  default     = "bludb"
 }
 
 variable "schema_name" {
   type        = string
   description = "Schema name for OMS database"
-  default     = "OMDB10"
+  default     = "bludb"
 }
 
 variable "db_user" {
   type        = string
   description = "User name for DB"
-  default     = "omdb"
+  default     = "b185caa9"
 }
 
 variable "ingress_host" {
@@ -154,6 +154,10 @@ variable "ingress_host" {
   description = "Ingress host name"
   default     = "toolkit-dev-ocp48-gitops2-2ab66b053c14936810608de9a1deac9c-0000.us-east.containers.appdomain.cloud"
 }
+
+
+
+
 
 
 
