@@ -290,7 +290,10 @@ module "service_account" {
     ]
     
   }]
-  rbac_roles = ["edit"]
+  rbac_roles = [{
+    name = "edit"
+  
+  }]
   rbac_cluster_scope = true
   server_name = var.server_name
   pull_secrets = ["ibm-entitlement-key"]
