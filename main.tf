@@ -26,7 +26,7 @@ locals {
         datasourceName =  "jdbc/OMDS"
         systemPool =  true
         schema = var.schema_name
-        ssl =  false    
+        ssl =  true    
       }
       serviceAccountName = "ibm-oms-ent-prod-ibm-oms-ent-prod"  
       customerOverrides = []

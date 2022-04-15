@@ -140,7 +140,7 @@ variable "db_name" {
 variable "schema_name" {
   type        = string
   description = "Schema name for OMS database"
-  default     = "bludb"
+  default     = "OMDB"
 }
 
 variable "db_user" {
