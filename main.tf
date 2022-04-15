@@ -28,6 +28,7 @@ locals {
         schema = var.schema_name
         ssl =  true    
       }
+      
       serviceAccountName = "ibm-oms-ent-prod-ibm-oms-ent-prod"  
       customerOverrides = []
       security = {
