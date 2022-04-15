@@ -148,6 +148,7 @@ variable "dbpassword" {
   default     = "fbZw3MaEf2V7J8i28Km@F3qqPluvq"
 }
 
+
 variable "ingress_host" {
   type        = string
   description = "Ingress host name"
