@@ -115,19 +115,19 @@ variable "appserver_image_tag" {
 variable "db_server" {
   type        = string
   description = "Host IP of DB"
-  default     = "f98323d9-430b-4961-88ec-384a0a0bdf34.c8l9ggsd0kmvoig3l8kg.databases.appdomain.cloud"
+  default     = "db2w-nvirjaw.us-east.db2w.cloud.ibm.com"
 }
 
 variable "db_port" {
   type        = number
   description = "Port for DB Server"
-  default     = 32626
+  default     = 50001
 }
 
 variable "db_name" {
   type        = string
   description = "Database name"
-  default     = "bludb"
+  default     = "BLUDB"
 }
 
 variable "schema_name" {
@@ -139,13 +139,13 @@ variable "schema_name" {
 variable "db_user" {
   type        = string
   description = "User name for DB"
-  default     = "4b3e0a7a"
+  default     = "bluadmin"
 }
 variable "dbpassword" {
   type        = string
   description = "The DB2 password"
   sensitive   = true
-  default     = "ffeybsoelbd3Jd01"
+  default     = "fbZw3MaEf2V7J8i28Km@F3qqPluvq"
 }
 
 variable "ingress_host" {
