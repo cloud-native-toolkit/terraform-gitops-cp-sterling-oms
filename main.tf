@@ -77,7 +77,7 @@ locals {
           cpu = 1
         }
       }  
-      customConfigMaps = ["ibm-oms-ent-prod-def-server-xml-conf","ibm-oms-ent-prod-oms-secret","ibm-oms-ent-prod-mediator"]
+      customConfigMaps = []
       customSecrets = []
   } 
 
