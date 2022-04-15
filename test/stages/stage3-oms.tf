@@ -9,5 +9,5 @@ module "oms" {
   entitlement_key = module.cp_catalogs.entitlement_key
   consoleadminpassword = "password"
   consolenonadminpassword = "password"
-  dbpassword = "omdb"
+  dbpassword = "fbZw3MaEf2V7J8i28Km@F3qqPluvq"
 }

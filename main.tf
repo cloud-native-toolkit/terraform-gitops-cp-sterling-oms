@@ -22,7 +22,7 @@ locals {
         port = var.db_port
         dbname = var.db_name
         user = var.db_user
-        dbvendor = "Db2"
+        dbvendor = "db2"
         datasourceName =  "jdbc/OMDS"
         systemPool =  true
         schema = var.schema_name

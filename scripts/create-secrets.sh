@@ -3,7 +3,7 @@
 NAMESPACE="$1"
 DEST_DIR="$2"
 
-echo "in create-secrets"
+echo "in create-secrets .."
 echo "${NAMESPACE}"
 echo "${DEST_DIR}"
 echo "${ADMIN_PASSWORD}"
