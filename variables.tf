@@ -80,13 +80,6 @@ variable "server_name" {
   default     = "default"
 }
 
-variable "dbpassword" {
-  type        = string
-  description = "The console password"
-  sensitive   = true
-  default     = "BOwnzJHBH9kz122G"
-}
-
 variable "consoleadminpassword" {
   type        = string
   description = "The grafana user"
@@ -146,7 +139,13 @@ variable "schema_name" {
 variable "db_user" {
   type        = string
   description = "User name for DB"
-  default     = "b185caa9"
+  default     = "4b3e0a7a"
+}
+variable "dbpassword" {
+  type        = string
+  description = "The DB2 password"
+  sensitive   = true
+  default     = "ffeybsoelbd3Jd01"
 }
 
 variable "ingress_host" {
