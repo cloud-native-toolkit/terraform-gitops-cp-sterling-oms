@@ -50,7 +50,7 @@ else
   sleep 30
 fi
 
-sleep 15m
+sleep 10m
 
 #DEPLOYMENT="ibm-oms-ent-prod-appserver-om-app"
 #count=0
@@ -69,12 +69,24 @@ sleep 15m
 DEPLOYMENT="ibm-oms-ent-prod-appserver-om-app"
 #count=0
 
-POD=$(kubectl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' -l appname=om-app)
-echo ${POD}
-
 echo "Validate Deploy POD"
 
-echo $(kubectl get pod ${POD} -o jsonpath={.status.phase}) != "Running"
+POD=$(kubectl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' -l appname=om-app)
+echo "Pod Name"
+echo ${POD}
+
+PODStatus = $(kubectl get pod ${POD} -o jsonpath={.status.phase})
+echo "PodStatus"
+echo ${PODStatus}
+
+# deplopyment check for OMS Sterling
+
+count=0
+until kubectl get deployment ${DEPLOYMENT} -n ${NAMESPACE} || [[ $count -eq 20 ]]; do
+  echo "Waiting for deployment/ibm-oms-ent-prod-appserver-om-app in ${NAMESPACE}"
+  count=$((count + 1))
+  sleep 60
+done
 
 #while [[ $(kubectl get pod ${POD} -o jsonpath={.status.phase}) != "Running" ]]
 #do
