@@ -228,6 +228,7 @@ locals {
         installedFPNo = 0
       }
   }     
+  
   values_content = {
     global = local.global_config    
     appserver = local.appserver_config
