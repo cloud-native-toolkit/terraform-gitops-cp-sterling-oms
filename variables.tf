@@ -115,7 +115,7 @@ variable "appserver_image_tag" {
 variable "db_server" {
   type        = string
   description = "Host IP of DB"
-  default     = " 159.122.77.83"
+  default     = "159.122.77.83"
 }
 
 variable "db_port" {
