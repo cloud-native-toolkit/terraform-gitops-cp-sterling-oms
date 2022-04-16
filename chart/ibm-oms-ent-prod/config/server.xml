@@ -52,11 +52,11 @@
                 <user>admin</user>
         </administrator-role>
 
-        <sslDefault sslRef="defaultSSLSettings" />
+        <!-- {{ $trustStoreRef }} -->
 
-        <ssl id="defaultSSLSettings" sslProtocol="TLSv1.2" keyStoreRef="defaultKeyStore" {{ $trustStoreRef }} clientAuthenticationSupported="true" />
+        <ssl id="defaultSSLSettings" sslProtocol="TLSv1.2" keyStoreRef="defaultKeyStore" trustStoreRef="defaultTrustStore" clientAuthenticationSupported="true" />
 		<keyStore id="defaultKeyStore" location="${server.config.dir}/tls.p12" type="PKCS12" password="${env.tlskeystorepassword}" />
-		{{- if ne $trustStoreRef "" }}
+	<!-- {{- if ne $trustStoreRef "" }} -->	
 		<keyStore id="defaultTrustStore" location="${env.JAVA_TRUST_STORE_PATH}" type="PKCS12" password="${env.JAVA_TRUST_STORE_PASS}" />
 		{{- end }}
 

@@ -220,9 +220,9 @@ locals {
   }
 
   datasetup_config = {
-    #loadFactoryData = "donotinstall"
-    loadFactoryData = "install"
-      mode = "create"
+    loadFactoryData = "donotinstall"
+    #loadFactoryData = "install"
+      mode = ""
       fixPack = {  
         loadFPFactoryData = ""
         installedFPNo = 0
