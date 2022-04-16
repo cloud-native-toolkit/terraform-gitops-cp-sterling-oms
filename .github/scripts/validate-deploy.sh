@@ -69,17 +69,17 @@ sleep 10m
 DEPLOYMENT="ibm-oms-ent-prod-appserver-om-app"
 #count=0
 
-echo "Validate Deploy POD"
+#echo "Validate Deploy POD"
 
-POD=$(kubectl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' -l appname=om-app)
-echo "Pod Name"
-echo ${POD}
+#POD=$(kubectl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' -l appname=om-app)
+#echo "Pod Name"
+#echo ${POD}
 
-PODStatus = $(kubectl get pod ${POD} -o jsonpath={.status.phase})
-echo "PodStatus"
-echo ${PODStatus}
+#PODStatus = $(kubectl get pod ${POD} -o jsonpath={.status.phase})
+#echo "PodStatus"
+#echo ${PODStatus}
 
-# deplopyment check for OMS Sterling
+echo "deplopyment check for OMS Sterling installed"
 
 count=0
 until kubectl get deployment ${DEPLOYMENT} -n ${NAMESPACE} || [[ $count -eq 20 ]]; do
@@ -103,6 +103,9 @@ done
 #done
 
 kubectl rollout status "deployment/${DEPLOYMENT}" -n "${NAMESPACE}" || exit 1
+
+kubectl delete namespaces ${NAMESPACE}
+
 
 #kubectl get pods | grep ibm-oms-ent-prod-datasetup -n "${NAMESPACE}" || exit 1
 #echo "Database is being populated"
