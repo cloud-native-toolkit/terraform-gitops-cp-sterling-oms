@@ -9,6 +9,52 @@ This module requires DB2 installed in the cluster
 ## Software dependencies
 
 The module depends on the following software components:
+- DB2 
+
+### DB2 Connection Parameters
+
+**Provide the DB2 information ** in the variables.tf
+
+database 
+  serverName 
+  port 
+  dbname 
+  user = 
+  dbvendor = "db2"
+  datasourceName =  "jdbc/OMDS"
+  systemPool =  true
+  schema = 
+  ssl =  false    
+
+**DB2 Loading **
+
+If you want to load the Data to DB2, Pls make change
+
+  datasetup_config = {
+  loadFactoryData = "install"
+      mode = "create"
+      fixPack = {  
+        loadFPFactoryData = ""
+        installedFPNo = 0
+      }
+  }   
+
+If you dont want to load the Data to DB2, Pls make change
+
+  datasetup_config = {
+  loadFactoryData = "donotinstall"
+      mode = ""
+      fixPack = {  
+        loadFPFactoryData = ""
+        installedFPNo = 0
+      }
+  } 
+
+### PVC Creation
+
+Make sure Portworx got installed on the Openshift and verify the Storage class exist
+
+storageClassName = "portworx-db2-rwx-sc"
 
 ### Command-line tools
 
