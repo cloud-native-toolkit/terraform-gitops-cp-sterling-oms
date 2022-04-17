@@ -13,7 +13,7 @@ echo "${DB_PASSWORD}"
 mkdir -p "${DEST_DIR}"
 
 if [[ -z "${ADMIN_PASSWORD}" ]] || [[ -z "${NON_ADMIN_PASSWORD}" ]] || [[ -z "${DB_PASSWORD}" ]]; then
-  echo "DB_USER, DB_PASSWORD must be provided as environment variables"
+  echo "ADMIN PASSWORD, NON ADMIN PASSWORD, DB_PASSWORD must be provided as environment variables"
   exit 1
 fi
 
