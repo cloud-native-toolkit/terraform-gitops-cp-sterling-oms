@@ -13,7 +13,7 @@ The module depends on the following software components:
 
 ### DB2 Connection Parameters
 
-**Provide the DB2 information ** in the variables.tf
+##### Provide the DB2 information in the variables.tf
 
 database 
   serverName 
@@ -26,7 +26,7 @@ database
   schema = 
   ssl =  false    
 
-**DB2 Loading **
+##### DB2 Data Loading 
 
 If you want to load the Data to DB2, Pls make change
 
@@ -39,6 +39,7 @@ If you want to load the Data to DB2, Pls make change
       }
   }   
 
+##### DB2 Data - Dont Load  
 If you dont want to load the Data to DB2, Pls make change
 
   datasetup_config = {
@@ -52,8 +53,7 @@ If you dont want to load the Data to DB2, Pls make change
 
 ### PVC Creation
 
-Make sure Portworx got installed on the Openshift and verify the Storage class exist
-
+- Make sure Portworx got installed on the Openshift and verify the Storage class exist
 storageClassName = "portworx-db2-rwx-sc"
 
 ### Command-line tools
@@ -72,7 +72,6 @@ This module makes use of the output from other modules:
 
 - GitOps - github.com/cloud-native-toolkit/terraform-tools-gitops.git
 - Namespace - github.com/cloud-native-toolkit/terraform-gitops-namespace.git
-- etc
 
 ## Example usage
 

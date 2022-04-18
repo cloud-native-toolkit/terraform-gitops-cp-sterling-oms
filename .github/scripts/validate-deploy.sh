@@ -69,15 +69,15 @@ sleep 10m
 DEPLOYMENT="ibm-oms-ent-prod-appserver-om-app"
 #count=0
 
-#echo "Validate Deploy POD"
+echo "Validate Deploy POD"
 
-#POD=$(kubectl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' -l appname=om-app)
-#echo "Pod Name"
-#echo ${POD}
+POD=$(kubectl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' -l appname=om-app)
+echo "Pod Name"
+echo ${POD}
 
-#PODStatus = $(kubectl get pod ${POD} -o jsonpath={.status.phase})
-#echo "PodStatus"
-#echo ${PODStatus}
+PODStatus = $(kubectl get pod ${POD} -o jsonpath={.status.phase})
+echo "PodStatus"
+echo ${PODStatus}
 
 echo "deplopyment check for OMS Sterling installed"
 
