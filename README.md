@@ -88,4 +88,6 @@ module "oms" {
   entitlement_key = module.cp_catalogs.entitlement_key  
 }
 ```
+## References :
 
+- [OMS Helm Chart implementation](https://github.com/IBM/charts/blob/master/repo/ibm-helm/ibm-oms-ent-prod.md#ssl-configurations-for-securing-external-connections)
