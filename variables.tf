@@ -139,13 +139,13 @@ variable "schema_name" {
 variable "db_user" {
   type        = string
   description = "User name for DB"
-  default = admin
+  default = "admin"
 }
 variable "dbpassword" {
   type        = string
   description = "The DB2 password"
   sensitive   = true
-  default = password
+  default = "password"
 }
 
 
