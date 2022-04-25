@@ -4,31 +4,38 @@ The Sterling Order Management Software (OMS Plain Vanilla) images are Red Hat co
 
 1. Add the Sterling OMS chart to the gitops repo (charts/ibm-oms-ent-prod)
 
-This module requires DB2 installed in the cluster
+This module requires DB2 installed.
+
+#### Installation time with breakdowns 
+
+- DB2 installation (Outside of this)
+- DB2 Dataload with creation 1000+ tables, index etc : 2 hour 30 min
+- Plain Vanilla Sterling OMS : 24 min
 
 ## Software dependencies
 
 The module depends on the following software components:
 - DB2 
+  
 
 ### DB2 Connection Parameters
 
 ##### Provide the DB2 information in the variables.tf
 
-database 
-  serverName 
-  port 
-  dbname 
-  user = 
-  dbvendor = "db2"
-  datasourceName =  "jdbc/OMDS"
-  systemPool =  true
-  schema = 
-  ssl =  false    
+##### database 
+-serverName 
+-port 
+-dbname 
+-user = 
+-dbvendor = "db2"
+-datasourceName =  "jdbc/OMDS"
+-systemPool =  true
+-schema = 
+-ssl =  false    
 
 ##### DB2 Data Loading 
 
-If you want to load the Data to DB2, Pls make change
+- If you want to load the Data to DB2, Pls make change
 
   datasetup_config = {
   loadFactoryData = "install"
@@ -40,7 +47,7 @@ If you want to load the Data to DB2, Pls make change
   }   
 
 ##### DB2 Data - Dont Load  
-If you dont want to load the Data to DB2, Pls make change
+- If you dont want to load the Data to DB2, Pls make change
 
   datasetup_config = {
   loadFactoryData = "donotinstall"

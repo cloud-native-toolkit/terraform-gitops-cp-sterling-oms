@@ -115,13 +115,15 @@ variable "appserver_image_tag" {
 variable "db_server" {
   type        = string
   description = "Host IP of DB"
-  default     = "159.122.77.83"
+  #default     = "159.122.77.83"
+  default = "87339a92-us-east.lb.appdomain.cloud"
 }
 
 variable "db_port" {
   type        = number
   description = "Port for DB Server"
-  default     = 30245
+  #default     = 30245
+  default = 51000
 }
 
 variable "db_name" {
@@ -139,13 +141,15 @@ variable "schema_name" {
 variable "db_user" {
   type        = string
   description = "User name for DB"
-  default     = "omdb"
+  #default     = "omdb"
+  default = admin
 }
 variable "dbpassword" {
   type        = string
   description = "The DB2 password"
   sensitive   = true
-  default     = "omdb"
+  #default     = "omdb"
+  default = password
 }
 
 
