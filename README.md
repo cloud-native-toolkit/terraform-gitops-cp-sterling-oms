@@ -20,7 +20,7 @@ The module depends on the following software components:
 
 ### DB2 Connection Parameters
 
-##### Provide the DB2 information in the variables.tf
+##### update the DB2 information in the variables.tf
 
 ##### database 
 - serverName 
