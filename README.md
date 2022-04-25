@@ -23,15 +23,15 @@ The module depends on the following software components:
 ##### Provide the DB2 information in the variables.tf
 
 ##### database 
--serverName 
--port 
--dbname 
--user = 
--dbvendor = "db2"
--datasourceName =  "jdbc/OMDS"
--systemPool =  true
--schema = 
--ssl =  false    
+- serverName 
+- port 
+- dbname 
+- user = 
+- dbvendor = "db2"
+- datasourceName =  "jdbc/OMDS"
+- systemPool =  true
+- schema = 
+- ssl =  false    
 
 ##### DB2 Data Loading 
 
