@@ -50,7 +50,7 @@ locals {
           accessMode = "ReadWriteMany"
           capacity = 10
           capacityUnit = "Gi"
-          storageClassName = "ibmc-vpc-block-10iops-tier"
+          storageClassName = "portworx-db2-sc"
         }
         securityContext = {      
           fsGroup = 0
