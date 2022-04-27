@@ -8,9 +8,8 @@ This module requires DB2 installed.
 
 #### Installation time with breakdowns 
 
-- DB2 installation (Outside of this)
 - DB2 Dataload with creation 1000+ tables, index etc : 2 hour 30 min
-- Plain Vanilla Sterling OMS : 24 min
+- Plain Vanilla Sterling OMS : 22 min
 
 ## Software dependencies
 
@@ -33,11 +32,11 @@ The module depends on the following software components:
 - schema = 
 - ssl =  false    
 
-##### DB2 Data Loading 
+##### DB2 Data - Load 
 
 - If you want to load the Data to DB2, Pls make change
 
-  datasetup_config = {
+datasetup_config = {
   loadFactoryData = "install"
       mode = "create"
       fixPack = {  
@@ -49,7 +48,7 @@ The module depends on the following software components:
 ##### DB2 Data - Dont Load  
 - If you dont want to load the Data to DB2, Pls make change
 
-  datasetup_config = {
+datasetup_config = {
   loadFactoryData = "donotinstall"
       mode = ""
       fixPack = {  
@@ -61,7 +60,7 @@ The module depends on the following software components:
 ### PVC Creation
 
 - Make sure Portworx got installed on the Openshift and verify the Storage class exist
-storageClassName = "portworx-db2-rwx-sc"
+- storageClassName = "portworx-db2-rwx-sc"
 
 ### Command-line tools
 
