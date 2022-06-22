@@ -11,7 +11,7 @@ locals {
       fullNameOverride = ""
       nameOverride = ""
       image = {    
-        repository = "cp.icr.io/cp/ibm-oms-enterprise"
+        repository = var.oms_repository
         agentName = "om-agent"
         tag = var.agent_image_tag
         pullPolicy = "Always"
@@ -50,7 +50,7 @@ locals {
           accessMode = "ReadWriteMany"
           capacity = 10
           capacityUnit = "Gi"
-          storageClassName = "portworx-db2-sc"
+          storageClassName = var.storage_class
         }
         securityContext = {      
           fsGroup = 0
@@ -222,9 +222,9 @@ locals {
   
   
   datasetup_config = {
-    #loadFactoryData = "donotinstall"
-    loadFactoryData = "install"
-      mode = "create"
+    loadFactoryData = var.loadfactorydata
+    #loadFactoryData = "install"
+      mode = var.loadfactorydata_mode
       fixPack = {  
         loadFPFactoryData = ""
         installedFPNo = 0

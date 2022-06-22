@@ -148,6 +148,33 @@ variable "dbpassword" {
   default = "password"
 }
 
+variable "loadfactorydata" {
+  type        = string
+  description = "Loading Data for OMS"
+  sensitive   = true
+  default = "donotinstall"
+}
+
+variable "loadfactorydata_mode" {
+  type        = string
+  description = "Flag to Load Data for OMS"
+  sensitive   = true
+  default = ""
+}
+
+variable "oms_repository" {
+  type        = string
+  description = "Loading Data for OMS"
+  sensitive   = true
+  default = "cp.icr.io/cp/ibm-oms-enterprise"
+}
+
+variable "storage_class" {
+  type        = string
+  description = "Storage Class"
+  sensitive   = true
+  default = "portworx-db2-sc"
+}
 
 variable "ingress_host" {
   type        = string
