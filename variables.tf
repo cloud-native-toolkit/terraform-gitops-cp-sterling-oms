@@ -148,6 +148,20 @@ variable "dbpassword" {
   default = "password"
 }
 
+variable "dbvendor" {
+  type        = string
+  description = "Database Vendor"
+  sensitive   = true
+  default = "db2"
+}
+
+variable "db_datasource" {
+  type        = string
+  description = "Database Datasource"
+  sensitive   = true
+  default = "jdbc/OMDS"
+}
+
 variable "loadfactorydata" {
   type        = string
   description = "Loading Data for OMS"
@@ -174,6 +188,41 @@ variable "storage_class" {
   description = "Storage Class"
   sensitive   = true
   default = "ocs-storagecluster-ceph-rbd"
+}
+
+variable "storage_mode" {
+  type        = string
+  description = "Storage Mode"
+  sensitive   = true
+  default = "ReadWriteMany"
+}
+
+variable "storage_capacity_unit" {
+  type        = string
+  description = "Storage capacity unit"
+  sensitive   = true
+  default = "Gi"
+}
+
+variable "pv_name" {
+  type        = string
+  description = "PV Name"
+  sensitive   = true
+  default = "oms-pv"
+}
+
+variable "sa_name" {
+  type        = string
+  description = "Service Account Name"
+  sensitive   = true
+  default = "ibm-oms-ent-prod-ibm-oms-ent-prod"
+}
+
+variable "secret_name" {
+  type        = string
+  description = "OMS Secret Name"
+  sensitive   = true
+  default = "ibm-oms-ent-prod-oms-secret"
 }
 
 variable "ingress_host" {

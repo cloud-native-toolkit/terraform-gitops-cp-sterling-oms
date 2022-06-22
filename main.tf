@@ -16,20 +16,20 @@ locals {
         tag = var.agent_image_tag
         pullPolicy = "Always"
       } 
-      appSecret = "ibm-oms-ent-prod-oms-secret"
+      appSecret = var.secret_name
       database = {    
         serverName = var.db_server
         port = var.db_port
         dbname = var.db_name
         user = var.db_user
-        dbvendor = "db2"
-        datasourceName =  "jdbc/OMDS"
+        dbvendor = var.dbvendor
+        datasourceName =  var.db_datasource
         systemPool =  true
         schema = var.schema_name
         ssl =  false    
       }
       
-      serviceAccountName = "ibm-oms-ent-prod-ibm-oms-ent-prod"  
+      serviceAccountName = var.sa_name  
       customerOverrides = []
       security = {
         ssl = {
@@ -46,10 +46,10 @@ locals {
       envs = []
       persistence = {
         claims = {      
-          name = "oms-pv"
-          accessMode = "ReadWriteMany"
+          name = var.pv_name
+          accessMode = var.storage_mode
           capacity = 10
-          capacityUnit = "Gi"
+          capacityUnit = var.storage_capacity_unit
           storageClassName = var.storage_class
         }
         securityContext = {      
@@ -243,7 +243,7 @@ locals {
   application_branch = "main"
   namespace = var.namespace
   layer_config = var.gitops_config[local.layer]
-  sa_name       = "ibm-oms-ent-prod-ibm-oms-ent-prod"  
+  sa_name       = var.sa_name
 }
 
 module setup_clis {
