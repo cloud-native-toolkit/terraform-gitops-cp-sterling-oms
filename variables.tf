@@ -173,7 +173,7 @@ variable "storage_class" {
   type        = string
   description = "Storage Class"
   sensitive   = true
-  default = "portworx-db2-sc"
+  default = "ocs-storagecluster-ceph-rbd"
 }
 
 variable "ingress_host" {
