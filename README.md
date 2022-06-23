@@ -15,6 +15,7 @@ This module requires DB2 installed.
 
 The module depends on the following software components:
 - DB2 
+- Portworx Storage
   
 
 ### DB2 Connection Parameters
@@ -25,12 +26,13 @@ The module depends on the following software components:
 - serverName 
 - port 
 - dbname 
-- user = 
+- user 
 - dbvendor = "db2"
 - datasourceName =  "jdbc/OMDS"
 - systemPool =  true
 - schema = 
 - ssl =  false    
+
 
 ##### DB2 Data - Load 
 
