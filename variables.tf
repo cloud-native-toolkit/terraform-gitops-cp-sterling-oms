@@ -201,7 +201,7 @@ variable "storage_capacity_unit" {
   type        = string
   description = "Storage capacity unit"
   sensitive   = true
-  default = "Gi"
+  default = "GiB"
 }
 
 variable "pv_name" {
