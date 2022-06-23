@@ -4,7 +4,7 @@ The Sterling Order Management Software (OMS Plain Vanilla) images are Red Hat co
 
 1. Add the Sterling OMS chart to the gitops repo (charts/ibm-oms-ent-prod)
 
-This module requires DB2 installed.
+- This module requires DB2 installed.
 
 #### Installation time with breakdowns 
 
