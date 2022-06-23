@@ -187,7 +187,7 @@ variable "storage_class" {
   type        = string
   description = "Storage Class"
   sensitive   = true
-  default = "ibmc-vpcblock-odf-10iops"
+  default = ""
 }
 
 variable "storage_mode" {
