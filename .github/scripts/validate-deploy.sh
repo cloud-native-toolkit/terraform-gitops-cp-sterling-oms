@@ -50,7 +50,7 @@ else
   sleep 30
 fi
 
-sleep 1m
+
 
 #DEPLOYMENT="ibm-oms-ent-prod-appserver-om-app"
 #count=0
@@ -96,7 +96,7 @@ done
 
 kubectl rollout status "deployment/${DEPLOYMENT}" -n "${NAMESPACE}" || exit 1
 
-#kubectl delete namespaces ${NAMESPACE}
+kubectl delete namespaces ${NAMESPACE}
 
 
 #kubectl get pods | grep ibm-oms-ent-prod-datasetup -n "${NAMESPACE}" || exit 1
