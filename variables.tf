@@ -187,7 +187,7 @@ variable "storage_class" {
   type        = string
   description = "Storage Class"
   sensitive   = true
-  default = "ocs-storagecluster-ceph-rbd"
+  default = "ibmc-vpcblock-odf-10iops"
 }
 
 variable "storage_mode" {
