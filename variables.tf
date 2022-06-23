@@ -187,7 +187,7 @@ variable "storage_class" {
   type        = string
   description = "Storage Class"
   sensitive   = true
-  default = ""
+  default = "portworx-db2-rwx-sc"
 }
 
 variable "storage_mode" {
