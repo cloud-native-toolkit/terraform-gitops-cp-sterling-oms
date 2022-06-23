@@ -48,9 +48,10 @@ locals {
         claims = {      
           name = var.pv_name
           accessMode = var.storage_mode
-          capacity = 10
+          capacity = var.storage_capacity
           capacityUnit = var.storage_capacity_unit
           storageClassName = var.storage_class
+          volumeMode =var.storage_volume_mode
         }
         securityContext = {      
           fsGroup = 0

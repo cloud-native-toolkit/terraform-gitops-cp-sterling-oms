@@ -201,7 +201,21 @@ variable "storage_capacity_unit" {
   type        = string
   description = "Storage capacity unit"
   sensitive   = true
-  default = "GiB"
+  default = "Gi"
+}
+
+variable "storage_capacity" {
+  type        = string
+  description = "Storage capacity"
+  sensitive   = true
+  default = "10"
+}
+
+variable "storage_volume_mode" {
+  type        = string
+  description = "Storage mode"
+  sensitive   = true
+  default = "FileSystem"
 }
 
 variable "pv_name" {
