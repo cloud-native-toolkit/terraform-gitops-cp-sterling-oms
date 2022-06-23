@@ -5,7 +5,7 @@ GIT_TOKEN=$(cat git_token)
 
 export KUBECONFIG=$(cat .kubeconfig)
 NAMESPACE=$(cat .namespace)
-COMPONENT_NAME=$(jq -r '.name // "my-module"' gitops-output.json)
+COMPONENT_NAME=$(jq -r '.name // "ibm-oms-ent-prod"' gitops-output.json)
 BRANCH=$(jq -r '.branch // "main"' gitops-output.json)
 SERVER_NAME=$(jq -r '.server_name // "default"' gitops-output.json)
 LAYER=$(jq -r '.layer_dir // "2-services"' gitops-output.json)
@@ -50,21 +50,57 @@ else
   sleep 30
 fi
 
-DEPLOYMENT="${COMPONENT_NAME}-${BRANCH}"
+
+
+#DEPLOYMENT="ibm-oms-ent-prod-appserver-om-app"
+#count=0
+#until kubectl get deployment "${DEPLOYMENT}" -n "${NAMESPACE}" || [[ $count -eq 20 ]]; do
+#  echo "Waiting for deployment/${DEPLOYMENT} in ${NAMESPACE}"
+#  count=$((count + 1))
+#  sleep 15 
+#done
+
+#if [[ $count -eq 20 ]]; then
+#  echo "Timed out waiting for deployment/${DEPLOYMENT} in ${NAMESPACE}"
+#  kubectl get all -n "${NAMESPACE}"
+#  exit 1
+#fi
+
+DEPLOYMENT="ibm-oms-ent-prod-appserver-om-app"
+#count=0
+
+echo "Validate Deploy POD"
+
+echo "deplopyment check for OMS Sterling installed"
+
 count=0
-until kubectl get deployment "${DEPLOYMENT}" -n "${NAMESPACE}" || [[ $count -eq 20 ]]; do
-  echo "Waiting for deployment/${DEPLOYMENT} in ${NAMESPACE}"
+until kubectl get deployment ${DEPLOYMENT} -n ${NAMESPACE} || [[ $count -eq 20 ]]; do
+  echo "Waiting for deployment/ibm-oms-ent-prod-appserver-om-app in ${NAMESPACE}"
   count=$((count + 1))
-  sleep 15
+  sleep 60
 done
 
-if [[ $count -eq 20 ]]; then
-  echo "Timed out waiting for deployment/${DEPLOYMENT} in ${NAMESPACE}"
-  kubectl get all -n "${NAMESPACE}"
-  exit 1
-fi
+#while [[ $(kubectl get pod ${POD} -o jsonpath={.status.phase}) != "Running" ]]
+#do
+
+#echo "POD still not running"
+#POD1=$(kubectl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' -l appname=om-app)
+#echo ${POD1}
+
+#STATUS=$(kubectl get pod ${POD1} -o jsonpath={.status.phase})
+#echo ${STATUS}
+
+#echo "Waiting for appserver to run"
+#sleep 2m
+#done
 
 kubectl rollout status "deployment/${DEPLOYMENT}" -n "${NAMESPACE}" || exit 1
+
+kubectl delete namespaces ${NAMESPACE}
+
+
+#kubectl get pods | grep ibm-oms-ent-prod-datasetup -n "${NAMESPACE}" || exit 1
+#echo "Database is being populated"
 
 cd ..
 rm -rf .testrepo
