@@ -34,26 +34,18 @@ The module depends on the following software components:
 - ssl =  false    
 
 
-##### DB2 Data - Load (⚠️⚠️⚠️⚠️ Pls dont try this approach)
+##### DB2 Data - Load 
 
 ⚠️⚠️⚠️⚠️ Recommendations : Refer IBM Sterling OMS data load appraoch which pre-populates the database with the 1200 tables and index 
 
 Load factory setup data for Sterling Store Engagement (Legacy) - https://www.ibm.com/docs/en/order-management-sw/10.0?topic=lfsd-load-factory-setup-data-sterling-store-engagement-legacy
 
-- If you want to load the Data to DB2, Pls make change which takes 150 min as min depending on network, hosted environment.
-
-datasetup_config = {
-  loadFactoryData = "install"
-      mode = "create"
-      fixPack = {  
-        loadFPFactoryData = ""
-        installedFPNo = 0
-      }
-  }   
+As result, Database will be populated with 1200 tables and indexes.
 
 ##### DB2 Data - Dont Load  
 - If you dont want to load the Data to DB2, Pls make change
 
+```
 datasetup_config = {
   loadFactoryData = "donotinstall"
       mode = ""
@@ -62,6 +54,7 @@ datasetup_config = {
         installedFPNo = 0
       }
   } 
+```
 
 ### PVC Creation
 
